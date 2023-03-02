@@ -1,0 +1,25 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: mysql
+  name: mysql-network-delay
+spec:
+  schedule: '* * * * *'
+  startingDeadlineSeconds: null
+  concurrencyPolicy: 'Allow'
+  historyLimit: 1
+  type: 'NetworkChaos'
+  networkChaos:
+    selector:
+      namespaces:
+        - mysql
+      labelSelectors:
+        'pod_type': 'exporter'
+    mode: all
+    action: delay
+    duration: 3s
+    delay:
+      latency: '3000ms'
+      correlation: '100'
+      jitter: '0ms'
+

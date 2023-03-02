@@ -1,0 +1,28 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: mysql
+  name: mysql-exporter-stress
+  annotations:
+    experiment.chaos-mesh.org/pause: 'false'
+spec:
+  schedule: '* * * * *'
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Allow
+  historyLimit: 1
+  type: StressChaos
+  stressChaos:
+    selector:
+      namespaces:
+        - mysql
+      labelSelectors:
+        'pod_type': 'exporter'
+    mode: all
+    stressors:
+      memory:
+        workers: 1
+        size: 70%
+      cpu:
+        workers: 2
+        load: 40
+    duration: 20s

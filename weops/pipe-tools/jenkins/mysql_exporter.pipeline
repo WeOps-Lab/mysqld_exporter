@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment {
-       PATH = "/usr/local/go/bin:${env.PATH}"
+       PATH = "/data/go/bin:${env.PATH}"
     }
 
     stages {

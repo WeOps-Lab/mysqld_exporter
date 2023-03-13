@@ -5,7 +5,7 @@ pipeline {
 
     parameters {
        string(name: 'BranchName', defaultValue: 'dev', description: null)
-       string(name: 'GitTag', defaultValue: 'v1.0.0', description: null)
+       string(name: 'GitTag', defaultValue: 'dev', description: null)
        string(name: 'BuildPath', defaultValue: 'weops/pipe-tools/bin', description: 'The path to build binaries')
     }
 
@@ -42,7 +42,7 @@ pipeline {
         stage('构建镜像') {
             steps {
                 dir("${env.BuildPath}") {
-                    sh 'docker build -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest .'
+                    sh 'docker build --no-cache  -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest .'
                 }
             }
         }
@@ -87,7 +87,7 @@ pipeline {
             steps {
                 dir("${env.BuildPath}") {
                     sh "tar -cvzf mysql_exporter_${env.GitTag}.tar.gz mysql_exporter mysql_exporter.exe mysql_exporter_arm64"
-                    minio bucket: "release", credentialsId: "minio", excludes: "", host: "http://10.10.25.66:9000/", includes: "*.tar.gz", targetFolder: "monitor_plugin/mysql/binary"
+                    minio bucket: "release", credentialsId: "minio", excludes: "", host: "http://10.10.25.66:9000/", includes: "mysql_exporter_${env.GitTag}.tar.gz", targetFolder: "monitor_plugin/mysql/binary"
                 }
             }
         }

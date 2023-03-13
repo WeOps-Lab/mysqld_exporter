@@ -10,6 +10,8 @@ commonLabels:
   object: mysql
 
 primary:
+  nodeSelector:
+    node-role: worker
   podLabels:
     object: mysql
   persistence:
@@ -24,6 +26,8 @@ primary:
     enabled: false
 
 secondary:
+  nodeSelector:
+    node-role: worker
   podLabels:
     object: mysql
   persistence:

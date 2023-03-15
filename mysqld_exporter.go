@@ -15,10 +15,12 @@ package main
 
 import (
 	"context"
+	dto "github.com/prometheus/client_model/go"
 	"net/http"
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-kit/log"
@@ -61,6 +63,10 @@ var (
 		"tls.insecure-skip-verify",
 		"Ignore certificate and server verification when using a tls connection.",
 	).Bool()
+	mysqlMetricsOnly = kingpin.Flag(
+		"mysql-only-metrics",
+		"Whether to also export go runtime metrics, defaults to true.",
+	).Default("true").Bool()
 	toolkitFlags = webflag.AddFlags(kingpin.CommandLine, ":9104")
 	c            = config.MySqlConfigHandler{
 		Config: &config.Config{},
@@ -174,10 +180,20 @@ func newHandler(metrics collector.Metrics, scrapers []collector.Scraper, logger 
 
 		registry.MustRegister(collector.New(ctx, dsn, metrics, filteredScrapers, logger))
 
-		gatherers := prometheus.Gatherers{
-			prometheus.DefaultGatherer,
-			registry,
+		var gatherers prometheus.Gatherers
+		// 过滤自带的默认指标
+		if *mysqlMetricsOnly {
+			gatherers = prometheus.Gatherers{
+				filteredGatherer(prometheus.DefaultGatherer),
+				registry,
+			}
+		} else {
+			gatherers = prometheus.Gatherers{
+				prometheus.DefaultGatherer,
+				registry,
+			}
 		}
+
 		// Delegate http serving to Prometheus client library, which will call collector.Collect.
 		h := promhttp.HandlerFor(gatherers, promhttp.HandlerOpts{})
 		h.ServeHTTP(w, r)
@@ -249,4 +265,23 @@ func main() {
 		level.Error(logger).Log("msg", "Error starting HTTP server", "err", err)
 		os.Exit(1)
 	}
+}
+
+// filteredGatherer 过滤go的性能指标
+func filteredGatherer(g prometheus.Gatherer) prometheus.Gatherer {
+	return prometheus.GathererFunc(func() ([]*dto.MetricFamily, error) {
+		metricFamilies, err := g.Gather()
+		if err != nil {
+			return nil, err
+		}
+
+		filteredFamilies := []*dto.MetricFamily{}
+		for _, mf := range metricFamilies {
+			if !strings.HasPrefix(mf.GetName(), "go_") {
+				filteredFamilies = append(filteredFamilies, mf)
+			}
+		}
+
+		return filteredFamilies, nil
+	})
 }

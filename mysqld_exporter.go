@@ -277,7 +277,7 @@ func filteredGatherer(g prometheus.Gatherer) prometheus.Gatherer {
 
 		filteredFamilies := []*dto.MetricFamily{}
 		for _, mf := range metricFamilies {
-			if !strings.HasPrefix(mf.GetName(), "go_") {
+			if !strings.HasPrefix(mf.GetName(), "go_") && !strings.HasPrefix(mf.GetName(), "process_") && !strings.HasPrefix(mf.GetName(), "promhttp_") {
 				filteredFamilies = append(filteredFamilies, mf)
 			}
 		}

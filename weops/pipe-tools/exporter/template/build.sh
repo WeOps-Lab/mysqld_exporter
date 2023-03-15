@@ -6,4 +6,7 @@ for version in v5-7 v8-0-32; do
 
   cluster_output_file="cluster_${version}.yaml"
   sed "s/{{VERSION}}/${version}/g" cluster.tpl > ../cluster/${cluster_output_file}
+
+  cluster_secondary_output_file="cluster_secondary_${version}.yaml"
+  sed "s/{{VERSION}}/${version}/g" cluster_secondary.tpl > ../cluster/${cluster_secondary_output_file}
 done

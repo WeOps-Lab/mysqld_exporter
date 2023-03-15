@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 部署监控对象
-object_versions=("5.7" "8.0")
+object_versions=("5.7" "8.0.32")
 object=mysql
 
 for version in "${object_versions[@]}"; do

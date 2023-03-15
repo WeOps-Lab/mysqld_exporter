@@ -31,3 +31,17 @@ data:
     password = Weops123!
     host = mysql-cluster-v8-0-32-primary
     port = 3306
+
+  mysql_client_cluster_secondary_v5-7.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mysql-cluster-v5-7-secondary
+    port = 3306
+
+  mysql_client_cluster_secondary_v8-0-32.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mysql-cluster-v8-0-32-secondary
+    port = 3306

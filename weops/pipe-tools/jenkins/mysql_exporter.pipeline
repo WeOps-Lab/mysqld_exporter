@@ -44,7 +44,7 @@ pipeline {
                             if (arch == "linux-amd64") {
                                 sh "${options} go build -o ${env.BuildPath}/mysql_exporter"
                             } else if (arch == "windows-amd64") {
-                                sh "${options} go build PREFIX=${env.BuildPath} -o ${env.BuildPath}/mysql_exporter.exe"
+                                sh "${options} go build -o ${env.BuildPath}/mysql_exporter.exe"
                             } else if (arch == "linux-arm64") {
                                 sh "${options} go build -o ${env.BuildPath}/mysql_exporter_arm64"
                             }

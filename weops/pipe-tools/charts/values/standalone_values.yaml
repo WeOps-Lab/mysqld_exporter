@@ -1,5 +1,10 @@
 architecture: standalone
 
+initdbScripts:
+  user.sql: |
+    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
+    GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'weops'@'%';
+
 auth:
   rootPassword: weops
   database: weops_database

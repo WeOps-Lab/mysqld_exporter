@@ -21,10 +21,10 @@ primary:
     object: mysql
   persistence:
     enabled: false
-  resources:
-    limits:
-      cpu: 100m
-      memory: 200Mi
+#  resources:
+#    limits:
+#      cpu: 100m
+#      memory: 200Mi
   livenessProbe:
     enabled: false
   readinessProbe:
@@ -39,10 +39,10 @@ secondary:
     object: mysql
   persistence:
     enabled: false
-  resources:
-    limits:
-      cpu: 100m
-      memory: 200Mi
+#  resources:
+#    limits:
+#      cpu: 100m
+#      memory: 200Mi
   livenessProbe:
     enabled: false
   readinessProbe:

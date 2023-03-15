@@ -18,14 +18,14 @@ data:
     host = mysql-standalone-v8-0-32
     port = 3306
 
-  mysql_client_cluster_v5-7.cnf: |-
+  mysql_client_cluster_primary_v5-7.cnf: |-
     [client]
     user = weops
     password = Weops123!
     host = mysql-cluster-v5-7-primary
     port = 3306
 
-  mysql_client_cluster_v8-0-32.cnf: |-
+  mysql_client_cluster_primary_v8-0-32.cnf: |-
     [client]
     user = weops
     password = Weops123!

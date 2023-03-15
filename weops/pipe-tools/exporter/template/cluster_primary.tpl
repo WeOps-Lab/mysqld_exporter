@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql-exporter-cluster-{{VERSION}}
+  name: mysql-exporter-cluster-primary-{{VERSION}}
   namespace: mysql
 spec:
-  serviceName: mysql-exporter-cluster-{{VERSION}}
+  serviceName: mysql-exporter-cluster-primary-{{VERSION}}
   replicas: 1
   selector:
     matchLabels:
-      app: mysql-exporter-cluster-{{VERSION}}
+      app: mysql-exporter-cluster-primary-{{VERSION}}
   template:
     metadata:
       annotations:
@@ -45,7 +45,7 @@ spec:
         telegraf.influxdata.com/limits-cpu: '300m'
         telegraf.influxdata.com/limits-memory: '300Mi'
       labels:
-        app: mysql-exporter-cluster-{{VERSION}}
+        app: mysql-exporter-cluster-primary-{{VERSION}}
         exporter_object: mysql
         object_mode: cluster
         object_version: {{VERSION}}
@@ -57,14 +57,14 @@ spec:
           configMap:
             name: mysql-client-conf
       containers:
-      - name: mysql-exporter-cluster-{{VERSION}}
+      - name: mysql-exporter-cluster-primary-{{VERSION}}
         image: registry-svc:25000/library/mysql-exporter:latest
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
         args:
-          - --config.my-cnf=/client_conf/mysql_client_cluster_{{VERSION}}.cnf
+          - --config.my-cnf=/client_conf/mysql_client_cluster_primary_{{VERSION}}.cnf
         volumeMounts:
          - mountPath: /client_conf
            name: mysql-client-conf
@@ -83,8 +83,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mysql-exporter-cluster-{{VERSION}}
-  name: mysql-exporter-cluster-{{VERSION}}
+    app: mysql-exporter-cluster-primary-{{VERSION}}
+  name: mysql-exporter-cluster-primary-{{VERSION}}
   namespace: mysql
   annotations:
     prometheus.io/scrape: "true"
@@ -96,4 +96,4 @@ spec:
     protocol: TCP
     targetPort: 9104
   selector:
-    app: mysql-exporter-cluster-{{VERSION}}
+    app: mysql-exporter-cluster-primary-{{VERSION}}

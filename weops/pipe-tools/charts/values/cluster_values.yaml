@@ -24,6 +24,8 @@ primary:
     enabled: false
   readinessProbe:
     enabled: false
+  startupProbe:
+    enabled: false
 
 secondary:
   nodeSelector:
@@ -39,4 +41,6 @@ secondary:
   livenessProbe:
     enabled: false
   readinessProbe:
+    enabled: false
+  startupProbe:
     enabled: false

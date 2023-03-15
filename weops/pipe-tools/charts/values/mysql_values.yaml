@@ -1,10 +1,10 @@
-architecture: replication
+initdbScripts:
+  user.sql: |
+    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
+    GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'weops'@'%';
 
 auth:
   rootPassword: weops
-  database: weops_database
-  username: weops
-  password: Weops123!
 
 commonLabels:
   object: mysql
@@ -19,7 +19,7 @@ primary:
   resources:
     limits:
       cpu: 100m
-      memory: 200Mi
+      memory: 500Mi
   livenessProbe:
     enabled: false
   readinessProbe:
@@ -37,7 +37,7 @@ secondary:
   resources:
     limits:
       cpu: 100m
-      memory: 200Mi
+      memory: 500Mi
   livenessProbe:
     enabled: false
   readinessProbe:

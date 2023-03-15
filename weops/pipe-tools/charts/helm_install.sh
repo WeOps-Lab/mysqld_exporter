@@ -9,11 +9,13 @@ for version in "${object_versions[@]}"; do
 
     helm install $object-standalone-$version_suffix --namespace $object -f ./values/standalone_values.yaml \
     --set image.tag=$version \
+    --set architecture=standalone \
     --set $object.podLabels.object_version=$version_suffix \
     ./$object
 
     helm install $object-cluster-$version_suffix --namespace $object -f ./values/cluster_values.yaml \
     --set image.tag=$version \
+    --set architecture=replication \
     --set $object.podLabels.object_version=$version_suffix \
     ./$object
 done

@@ -42,7 +42,7 @@ pipeline {
                         [(arch): {
                             if (arch == "linux-amd64") {
                                 sh "go build GOPROXY=https://goproxy.cn ${options} -o ${env.BuildPath}/mysql_exporter"
-                            } if (arch == "windows-amd64") {
+                            } else if (arch == "windows-amd64") {
                                 sh "go build GOPROXY=https://goproxy.cn ${options} PREFIX=${env.BuildPath} -o ${env.BuildPath}/mysql_exporter.exe"
                             } else if (arch == "linux-arm64") {
                                 sh "go build GOPROXY=https://goproxy.cn ${options} -o ${env.BuildPath}/mysql_exporter_arm64"

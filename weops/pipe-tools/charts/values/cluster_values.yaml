@@ -1,0 +1,42 @@
+architecture: replication
+
+auth:
+  rootPassword: weops
+  database: weops_database
+  username: weops
+  password: Weops123!
+
+commonLabels:
+  object: mysql
+
+primary:
+  nodeSelector:
+    node-role: worker
+  podLabels:
+    object: mysql
+  persistence:
+    enabled: false
+  resources:
+    limits:
+      cpu: 100m
+      memory: 200Mi
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+
+secondary:
+  nodeSelector:
+    node-role: worker
+  podLabels:
+    object: mysql
+  persistence:
+    enabled: false
+  resources:
+    limits:
+      cpu: 100m
+      memory: 200Mi
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false

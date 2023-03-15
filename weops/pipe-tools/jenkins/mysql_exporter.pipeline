@@ -81,6 +81,7 @@ pipeline {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'chaos', namespace: '', serverUrl: 'https://10.10.90.113:6443') {
                     dir('weops/pipe-tools/exporter') {
                         sh 'kubectl replace --force -f ./standalone -n mysql'
+                        sh 'kubectl replace --force -f ./cluster -n mysql'
                         sh 'kubectl replace --force -f ./client_configMap.yml -n mysql'
                     }
                     dir('weops/pipe-tools/chaos') {

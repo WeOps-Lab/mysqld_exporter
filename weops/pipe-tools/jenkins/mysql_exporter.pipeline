@@ -34,14 +34,19 @@ pipeline {
             steps {
                 script {
                     def buildOptions = [
-                        "linux-amd64": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64",
-                        "windows-amd64": "CGO_ENABLED=0 GOOS=windows GOARCH=amd64",
-                        "linux-arm64": "CGO_ENABLED=0 GOOS=linux GOARCH=arm64"
+                        "linux-amd64": "GOOS=linux GOARCH=amd64",
+                        "windows-amd64": "GOOS=windows GOARCH=amd64",
+                        "linux-arm64": "GOOS=linux GOARCH=arm64"
                     ]
                     parallel buildOptions.collectEntries { arch, options ->
                         [(arch): {
-                            sh 'go env -w GOPROXY=https://goproxy.cn'
-                            sh "${options} go build -o ${env.BuildPath}/mysql_exporter_${arch}"
+                            if (arch == "linux-amd64") {
+                                sh "go build GOPROXY=https://goproxy.cn ${options} -o ${env.BuildPath}/mysql_exporter"
+                            } if (arch == "windows-amd64") {
+                                sh "go build GOPROXY=https://goproxy.cn ${options} PREFIX=${env.BuildPath} -o ${env.BuildPath}/mysql_exporter.exe"
+                            } else if (arch == "linux-arm64") {
+                                sh "go build GOPROXY=https://goproxy.cn ${options} -o ${env.BuildPath}/mysql_exporter_arm64"
+                            }
                         }]
                     }
                 }

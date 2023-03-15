@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-client-conf
+  namespace: mysql
+data:
+  mysql_client_v5-7.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mysql-standalone-v5-7
+    port = 3306
+
+  mysql_client_v8-0.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mysql-standalone-v8-0
+    port = 3306

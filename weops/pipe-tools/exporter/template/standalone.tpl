@@ -52,6 +52,10 @@ spec:
         pod_type: exporter
     spec:
       shareProcessNamespace: true
+      volumes:
+        - name: mysql-client-conf
+          configMap:
+            name: mysql-client-conf
       containers:
       - name: mysql-exporter-standalone-{{VERSION}}
         image: registry-svc:25000/library/mysql-exporter:latest
@@ -60,7 +64,10 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 0
         args:
-
+          - --config.my-cnf=/client_conf/mysql_client_{{VERSION}}.cnf
+        volumeMounts:
+         - mountPath: /client_conf
+           name: mysql-client-conf
         resources:
           requests:
             cpu: 100m
@@ -69,7 +76,7 @@ spec:
             cpu: 300m
             memory: 300Mi
         ports:
-        - containerPort: 9121
+        - containerPort: 9104
 
 ---
 apiVersion: v1
@@ -81,12 +88,12 @@ metadata:
   namespace: mysql
   annotations:
     prometheus.io/scrape: "true"
-    prometheus.io/port: "9121"
+    prometheus.io/port: "9104"
     prometheus.io/path: '/metrics'
 spec:
   ports:
-  - port: 9121
+  - port: 9104
     protocol: TCP
-    targetPort: 9121
+    targetPort: 9104
   selector:
     app: mysql-exporter-standalone-{{VERSION}}

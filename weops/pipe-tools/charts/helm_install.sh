@@ -7,7 +7,7 @@ object=mysql
 for version in "${object_versions[@]}"; do
     version_suffix="v${version//./-}"
 
-    helm install redis-standalone-$version_suffix --namespace $object -f ./values/standalone_values.yaml \
+    helm install $object-standalone-$version_suffix --namespace $object -f ./values/standalone_values.yaml \
     --set image.tag=$version \
     --set $object.podLabels.object_version=$version_suffix \
     ./$object

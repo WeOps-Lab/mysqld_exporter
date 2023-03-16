@@ -7,8 +7,6 @@ for version in "${object_versions[@]}"; do
     if [[ "$version" == "5.5" || "$version" == "5.6" ]]; then
       helm install $object-standalone-$version_suffix --namespace $object -f ./values/mysql_values.yaml \
       --set imageTag=$version \
-      --set architecture=standalone \
-      --set $object.podLabels.object_version=$version_suffix \
       ./mysql
 
     else

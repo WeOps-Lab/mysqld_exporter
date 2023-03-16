@@ -6,29 +6,28 @@ for version in "${object_versions[@]}"; do
 
     if [[ "$version" == "5.5" || "$version" == "5.6" ]]; then
       helm install $object-standalone-$version_suffix --namespace $object -f ./values/mysql_values.yaml \
-      --set image.repository=mysql \
-      --set image.tag=$version \
+      --set imageTag=$version \
       --set architecture=standalone \
       --set $object.podLabels.object_version=$version_suffix \
-      ./$object
+      ./mysql
 
       helm install $object-cluster-$version_suffix --namespace $object -f ./values/mysql_values.yaml \
-      --set image.repository=mysql \
-      --set image.tag=$version \
+      --set imageTag=$version \
       --set architecture=replication \
       --set $object.podLabels.object_version=$version_suffix \
-      ./$object
+      ./mysql
+
     else
-      helm install $object-standalone-$version_suffix --namespace $object -f ./values/mysql_values.yaml \
+      helm install $object-standalone-$version_suffix --namespace $object -f ./values/bitnami_mysql_values.yaml \
       --set image.tag=$version \
       --set architecture=standalone \
       --set $object.podLabels.object_version=$version_suffix \
-      ./$object
+      ./bitnami-mysql
 
-      helm install $object-cluster-$version_suffix --namespace $object -f ./values/mysql_values.yaml \
+      helm install $object-cluster-$version_suffix --namespace $object -f ./values/bitnami_mysql_values.yaml \
       --set image.tag=$version \
       --set architecture=replication \
       --set $object.podLabels.object_version=$version_suffix \
-      ./$object
+      ./bitnami-mysql
     fi
 done

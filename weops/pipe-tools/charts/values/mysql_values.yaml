@@ -1,46 +1,24 @@
-initdbScripts:
+initializationFiles:
   user.sql: |
     CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
     GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'weops'@'%';
 
-auth:
-  rootPassword: weops
+mysqlRootPassword: Weops123!
 
 commonLabels:
   object: mysql
 
-primary:
-  nodeSelector:
-    node-role: worker
-  podLabels:
-    object: mysql
-  persistence:
-    enabled: false
-  resources:
-    limits:
-      cpu: 100m
-      memory: 500Mi
-  livenessProbe:
-    enabled: false
-  readinessProbe:
-    enabled: false
-  startupProbe:
-    enabled: false
+nodeSelector:
+  node-role: worker
 
-secondary:
-  nodeSelector:
-    node-role: worker
-  podLabels:
+persistence:
+  enabled: false
+
+podLabels:
     object: mysql
-  persistence:
-    enabled: false
-  resources:
-    limits:
-      cpu: 100m
-      memory: 500Mi
-  livenessProbe:
-    enabled: false
-  readinessProbe:
-    enabled: false
-  startupProbe:
-    enabled: false
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 500Mi
+

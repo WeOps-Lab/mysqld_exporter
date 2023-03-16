@@ -4,6 +4,20 @@ metadata:
   name: mysql-client-conf
   namespace: mysql
 data:
+  mysql_client_v5-5.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mysql-standalone-v5-5
+    port = 3306
+
+  mysql_client_v5-6.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mysql-standalone-v5-6
+    port = 3306
+
   mysql_client_v5-7.cnf: |-
     [client]
     user = weops

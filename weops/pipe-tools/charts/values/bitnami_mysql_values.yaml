@@ -26,15 +26,6 @@ primary:
     enabled: false
   startupProbe:
     enabled: false
-  configuration:
-    my.cnf: |
-      [mysqld]
-      default-storage-engine = InnoDB
-      innodb_file_per_table = 1
-      innodb_flush_log_at_trx_commit = 2
-      innodb_flush_method = O_DIRECT
-      innodb_log_file_size = 256M
-      innodb_buffer_pool_size = 1G
 
 secondary:
   nodeSelector:
@@ -53,12 +44,3 @@ secondary:
     enabled: false
   startupProbe:
     enabled: false
-  configuration:
-    my.cnf: |
-      [mysqld]
-      default-storage-engine = InnoDB
-      innodb_file_per_table = 1
-      innodb_flush_log_at_trx_commit = 2
-      innodb_flush_method = O_DIRECT
-      innodb_log_file_size = 256M
-      innodb_buffer_pool_size = 1G

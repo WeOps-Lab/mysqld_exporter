@@ -11,12 +11,6 @@ for version in "${object_versions[@]}"; do
       --set $object.podLabels.object_version=$version_suffix \
       ./mysql
 
-      helm install $object-cluster-$version_suffix --namespace $object -f ./values/mysql_values.yaml \
-      --set imageTag=$version \
-      --set architecture=replication \
-      --set $object.podLabels.object_version=$version_suffix \
-      ./mysql
-
     else
       helm install $object-standalone-$version_suffix --namespace $object -f ./values/bitnami_mysql_values.yaml \
       --set image.tag=$version \

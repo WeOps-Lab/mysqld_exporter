@@ -84,6 +84,7 @@ pipeline {
                         sh 'kubectl apply --force -f ./cluster -n mysql'
                         sh 'kubectl apply --force -f ./client_configMap.yml -n mysql'
                         sh 'kubectl get statefulsets -n mysql -o name | xargs kubectl rollout restart -n mysql'
+                        sh 'kubectl get deployment -n mysql -o name | xargs kubectl rollout restart -n mysql'
                     }
                     dir('weops/pipe-tools/chaos') {
                         sh 'kubectl apply -f ./ -n mysql'

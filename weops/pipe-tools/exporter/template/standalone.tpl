@@ -66,8 +66,8 @@ spec:
         args:
           - --config.my-cnf=/client_conf/mysql_client_{{VERSION}}.cnf
         volumeMounts:
-         - mountPath: /client_conf
-           name: mysql-client-conf
+          - mountPath: /client_conf
+            name: mysql-client-conf
         resources:
           requests:
             cpu: 100m

@@ -67,8 +67,8 @@ spec:
           - --config.my-cnf=/client_conf/mysql_client_cluster_secondary_{{VERSION}}.cnf
           - --collect.heartbeat
         volumeMounts:
-         - mountPath: /client_conf
-           name: mysql-client-conf
+          - mountPath: /client_conf
+            name: mysql-client-conf
         resources:
           requests:
             cpu: 100m

@@ -65,7 +65,6 @@ spec:
           runAsUser: 0
         args:
           - --config.my-cnf=/client_conf/mysql_client_cluster_primary_{{VERSION}}.cnf
-          - --collect.heartbeat
         volumeMounts:
          - mountPath: /client_conf
            name: mysql-client-conf

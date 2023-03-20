@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql-exporter-cluster-primary-{{VERSION}}
-  namespace: mysql
+  name: mariadb-exporter-cluster-primary-{{VERSION}}
+  namespace: mariadb
 spec:
-  serviceName: mysql-exporter-cluster-primary-{{VERSION}}
+  serviceName: mariadb-exporter-cluster-primary-{{VERSION}}
   replicas: 1
   selector:
     matchLabels:
-      app: mysql-exporter-cluster-primary-{{VERSION}}
+      app: mariadb-exporter-cluster-primary-{{VERSION}}
   template:
     metadata:
       annotations:
@@ -45,8 +45,8 @@ spec:
         telegraf.influxdata.com/limits-cpu: '300m'
         telegraf.influxdata.com/limits-memory: '300Mi'
       labels:
-        app: mysql-exporter-cluster-primary-{{VERSION}}
-        exporter_object: mysql
+        app: mariadb-exporter-cluster-primary-{{VERSION}}
+        exporter_object: mariadb
         object_mode: cluster
         object_version: {{VERSION}}
         pod_type: exporter
@@ -55,21 +55,21 @@ spec:
         node-role: worker
       shareProcessNamespace: true
       volumes:
-        - name: mysql-client-conf
+        - name: mariadb-client-conf
           configMap:
-            name: mysql-client-conf
+            name: mariadb-client-conf
       containers:
-      - name: mysql-exporter-cluster-primary-{{VERSION}}
+      - name: mariadb-exporter-cluster-primary-{{VERSION}}
         image: registry-svc:25000/library/mysql-exporter:latest
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
         args:
-          - --config.my-cnf=/client_conf/mysql_client_cluster_primary_{{VERSION}}.cnf
+          - --config.my-cnf=/client_conf/mariadb_client_cluster_primary_{{VERSION}}.cnf
         volumeMounts:
           - mountPath: /client_conf
-            name: mysql-client-conf
+            name: mariadb-client-conf
         resources:
           requests:
             cpu: 100m
@@ -85,9 +85,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mysql-exporter-cluster-primary-{{VERSION}}
-  name: mysql-exporter-cluster-primary-{{VERSION}}
-  namespace: mysql
+    app: mariadb-exporter-cluster-primary-{{VERSION}}
+  name: mariadb-exporter-cluster-primary-{{VERSION}}
+  namespace: mariadb
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "9104"
@@ -98,4 +98,4 @@ spec:
     protocol: TCP
     targetPort: 9104
   selector:
-    app: mysql-exporter-cluster-primary-{{VERSION}}
+    app: mariadb-exporter-cluster-primary-{{VERSION}}

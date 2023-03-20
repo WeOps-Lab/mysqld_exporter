@@ -15,14 +15,14 @@ function install_object {
 
     else
       helm install ${object}-standalone-${version_suffix} --namespace ${object} \
-        -f bitnami_values.yaml \
+        -f ./values/bitnami_values.yaml \
         --set image.tag=${version} \
         --set architecture=standalone \
         --set ${object}.podLabels.object_version=${version_suffix} \
         ./bitnami-${object}
 
       helm install ${object}-cluster-${version_suffix} --namespace ${object} \
-        -f bitnami_values.yaml \
+        -f ./values/bitnami_values.yaml \
         --set image.tag=${version} \
         --set architecture=replication \
         --set ${object}.podLabels.object_version=${version_suffix} \

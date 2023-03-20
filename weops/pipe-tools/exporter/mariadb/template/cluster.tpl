@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mariadb-exporter-cluster-primary-{{VERSION}}
+  name: mariadb-exporter-cluster-{{VERSION}}
   namespace: mariadb
 spec:
-  serviceName: mariadb-exporter-cluster-primary-{{VERSION}}
+  serviceName: mariadb-exporter-cluster-{{VERSION}}
   replicas: 1
   selector:
     matchLabels:
-      app: mariadb-exporter-cluster-primary-{{VERSION}}
+      app: mariadb-exporter-cluster-{{VERSION}}
   template:
     metadata:
       annotations:
@@ -45,7 +45,7 @@ spec:
         telegraf.influxdata.com/limits-cpu: '300m'
         telegraf.influxdata.com/limits-memory: '300Mi'
       labels:
-        app: mariadb-exporter-cluster-primary-{{VERSION}}
+        app: mariadb-exporter-cluster-{{VERSION}}
         exporter_object: mariadb
         object_mode: cluster
         object_version: {{VERSION}}
@@ -59,14 +59,14 @@ spec:
           configMap:
             name: mariadb-client-conf
       containers:
-      - name: mariadb-exporter-cluster-primary-{{VERSION}}
+      - name: mariadb-exporter-cluster-{{VERSION}}
         image: registry-svc:25000/library/mysql-exporter:latest
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
         args:
-          - --config.my-cnf=/client_conf/mariadb_client_cluster_primary_{{VERSION}}.cnf
+          - --config.my-cnf=/client_conf/mariadb_client_cluster_{{VERSION}}.cnf
         volumeMounts:
           - mountPath: /client_conf
             name: mariadb-client-conf
@@ -85,8 +85,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mariadb-exporter-cluster-primary-{{VERSION}}
-  name: mariadb-exporter-cluster-primary-{{VERSION}}
+    app: mariadb-exporter-cluster-{{VERSION}}
+  name: mariadb-exporter-cluster-{{VERSION}}
   namespace: mariadb
   annotations:
     prometheus.io/scrape: "true"
@@ -98,4 +98,4 @@ spec:
     protocol: TCP
     targetPort: 9104
   selector:
-    app: mariadb-exporter-cluster-primary-{{VERSION}}
+    app: mariadb-exporter-cluster-{{VERSION}}

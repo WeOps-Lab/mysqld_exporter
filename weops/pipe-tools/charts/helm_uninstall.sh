@@ -1,11 +1,14 @@
 #!/bin/bash
 
-# 卸载监控对象
-object=mysql
+# 设置需要删除的对象的名称空间
+object=("mysql" "mariadb")
 
-# Uninstall mysql deployments
-for RELEASE in $(helm list -n $object --short)
+for obj in "${object[@]}"
 do
-  echo "Uninstalling $RELEASE ..."
-  helm uninstall -n $object $RELEASE
+  # 删除 Helm chart
+  echo "Uninstalling $obj releases ..."
+  for RELEASE in $(helm list -n $obj --short)
+  do
+    helm uninstall -n $obj $RELEASE
+  done
 done

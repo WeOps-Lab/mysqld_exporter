@@ -51,6 +51,8 @@ spec:
         object_version: {{VERSION}}
         pod_type: exporter
     spec:
+      nodeSelector:
+        node-role: worker
       shareProcessNamespace: true
       volumes:
         - name: mysql-client-conf

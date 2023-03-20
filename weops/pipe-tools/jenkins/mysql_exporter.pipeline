@@ -83,22 +83,26 @@ pipeline {
         stage('部署探针和混沌工程') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'chaos', namespace: '', serverUrl: 'https://10.10.90.113:6443') {
-                    dir('weops/pipe-tools/exporter/mysql') {
-                        sh 'kubectl apply --force -f ./standalone -n mysql'
-                        sh 'kubectl apply --force -f ./cluster -n mysql'
-                        sh 'kubectl apply --force -f ./configMap -n mysql'
-
-                        sh 'kubectl get statefulsets -n mysql -o name | xargs kubectl rollout restart -n mysql'
-                        sh 'kubectl get deployment -n mysql -o name | xargs kubectl rollout restart -n mysql'
+                    def mysql = {
+                        dir('weops/pipe-tools/exporter/mysql') {
+                            sh 'kubectl delete svc -n mysql --all'
+                            sh 'kubectl apply --force -f ./standalone -n mysql'
+                            sh 'kubectl apply --force -f ./cluster -n mysql'
+                            sh 'kubectl apply --force -f ./configMap -n mysql'
+                            sh 'kubectl get statefulsets -n mysql -o name | xargs kubectl rollout restart -n mysql'
+                            sh 'kubectl get deployment -n mysql -o name | xargs kubectl rollout restart -n mysql'
+                        }
                     }
-
-                    dir('weops/pipe-tools/exporter/mariadb') {
-                        sh 'kubectl apply --force -f ./standalone -n mariadb'
-                        sh 'kubectl apply --force -f ./cluster -n mariadb'
-                        sh 'kubectl apply --force -f ./configMap -n mariadb'
-
-                        sh 'kubectl get statefulsets -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
+                    def mariadb = {
+                        dir('weops/pipe-tools/exporter/mariadb') {
+                            sh 'kubectl delete svc -n mariadb --all'
+                            sh 'kubectl apply --force -f ./standalone -n mariadb'
+                            sh 'kubectl apply --force -f ./cluster -n mariadb'
+                            sh 'kubectl apply --force -f ./configMap -n mariadb'
+                            sh 'kubectl get statefulsets -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
+                        }
                     }
+                    parallel mysql, mariadb
 
                     dir('weops/pipe-tools/chaos') {
                         sh 'kubectl apply -f ./ '
@@ -106,6 +110,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('上传探针制品'){
             steps {

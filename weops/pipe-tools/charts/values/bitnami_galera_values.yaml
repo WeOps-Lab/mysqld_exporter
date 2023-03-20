@@ -1,0 +1,17 @@
+auth:
+  rootPassword: Weops123!
+
+nodeSelector:
+  node-role: worker
+persistence:
+  enabled: false
+resources:
+  limits:
+    cpu: 100m
+    memory: 500Mi
+livenessProbe:
+  enabled: false
+readinessProbe:
+  enabled: false
+startupProbe:
+  enabled: false

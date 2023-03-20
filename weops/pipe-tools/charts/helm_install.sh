@@ -35,7 +35,7 @@ function install_object {
           ./bitnami-${object}
       elif [[ "$object" == "mariadb" ]]; then
         helm install ${object}-cluster-${version_suffix} --namespace ${object} \
-        -f ./values/bitnami_values.yaml \
+        -f ./values/bitnami_galera_values.yaml \
         --set image.tag=${version} \
         --set commonLabels.object=${object} \
         --set podLabels.object=${object} \

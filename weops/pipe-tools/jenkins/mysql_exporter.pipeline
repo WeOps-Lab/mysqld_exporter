@@ -98,7 +98,6 @@ pipeline {
                         sh 'kubectl apply --force -f ./configMap -n mariadb'
 
                         sh 'kubectl get statefulsets -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
-                        sh 'kubectl get deployment -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
                     }
 
                     dir('weops/pipe-tools/chaos') {

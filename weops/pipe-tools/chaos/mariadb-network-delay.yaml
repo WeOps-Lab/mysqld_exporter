@@ -1,8 +1,8 @@
 kind: Schedule
 apiVersion: chaos-mesh.org/v1alpha1
 metadata:
-  namespace: mysql
-  name: mysql-network-delay
+  namespace: mariadb
+  name: mariadb-network-delay
 spec:
   schedule: '* * * * *'
   startingDeadlineSeconds: null
@@ -12,14 +12,14 @@ spec:
   networkChaos:
     selector:
       namespaces:
-        - mysql
+        - mariadb
       labelSelectors:
-        'pod_type': 'exporter'
+        'object': 'mariadb'
     mode: all
     action: delay
-    duration: 3s
+    duration: 4s
     delay:
-      latency: '3000ms'
+      latency: '4000ms'
       correlation: '100'
       jitter: '0ms'
 

@@ -1,0 +1,152 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-client-conf
+  namespace: mariadb
+data:
+  mariadb_client_v10-3.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-3
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-3.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-3-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-3.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-3-secondary
+    port = 3306
+
+  mariadb_client_v10-4.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-4
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-4.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-4-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-4.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-4-secondary
+    port = 3306
+
+  mariadb_client_v10-5.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-5
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-5.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-5-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-5.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-5-secondary
+    port = 3306
+
+  mariadb_client_v10-6.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-6
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-6.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-6-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-6.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-6-secondary
+    port = 3306
+
+  mariadb_client_v10-7.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-7
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-7.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-7-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-7.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-7-secondary
+    port = 3306
+
+  mariadb_client_v10-8.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-8
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-8.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-8-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-8.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-8-secondary
+    port = 3306
+
+  mariadb_client_v10-9.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-standalone-v10-9
+    port = 3306
+
+  mariadb_client_cluster_primary_v10-9.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-9-primary
+    port = 3306
+
+  mariadb_client_cluster_secondary_v10-9.cnf: |-
+    [client]
+    user = weops
+    password = Weops123!
+    host = mariadb-cluster-v10-9-secondary
+    port = 3306

@@ -70,7 +70,11 @@ pipeline {
 
         stage('生成部署文件') {
             steps {
-                dir('weops/pipe-tools/exporter/template') {
+                dir('weops/pipe-tools/exporter/mysql/template') {
+                    sh 'bash build.sh'
+                }
+
+                dir('weops/pipe-tools/exporter/mariadb/template') {
                     sh 'bash build.sh'
                 }
             }
@@ -79,15 +83,26 @@ pipeline {
         stage('部署探针和混沌工程') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'chaos', namespace: '', serverUrl: 'https://10.10.90.113:6443') {
-                    dir('weops/pipe-tools/exporter') {
+                    dir('weops/pipe-tools/exporter/mysql') {
                         sh 'kubectl apply --force -f ./standalone -n mysql'
                         sh 'kubectl apply --force -f ./cluster -n mysql'
-                        sh 'kubectl apply --force -f ./client_configMap.yml -n mysql'
+                        sh 'kubectl apply --force -f ./configMap -n mysql'
+
                         sh 'kubectl get statefulsets -n mysql -o name | xargs kubectl rollout restart -n mysql'
                         sh 'kubectl get deployment -n mysql -o name | xargs kubectl rollout restart -n mysql'
                     }
+
+                    dir('weops/pipe-tools/exporter/mariadb') {
+                        sh 'kubectl apply --force -f ./standalone -n mariadb'
+                        sh 'kubectl apply --force -f ./cluster -n mariadb'
+                        sh 'kubectl apply --force -f ./configMap -n mariadb'
+
+                        sh 'kubectl get statefulsets -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
+                        sh 'kubectl get deployment -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
+                    }
+
                     dir('weops/pipe-tools/chaos') {
-                        sh 'kubectl apply -f ./ -n mysql'
+                        sh 'kubectl apply -f ./ '
                     }
                 }
             }

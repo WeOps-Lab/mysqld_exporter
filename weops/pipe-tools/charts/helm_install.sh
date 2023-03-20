@@ -18,6 +18,8 @@ function install_object {
         -f ./values/bitnami_values.yaml \
         --set image.tag=${version} \
         --set architecture=standalone \
+        --set commonLabels.object=${object} \
+        --set primary.podLabels.object=${object} \
         --set ${object}.podLabels.object_version=${version_suffix} \
         ./bitnami-${object}
 
@@ -25,6 +27,9 @@ function install_object {
         -f ./values/bitnami_values.yaml \
         --set image.tag=${version} \
         --set architecture=replication \
+        --set commonLabels.object=${object} \
+        --set primary.podLabels.object=${object} \
+        --set secondary.podLabels.object=${object} \
         --set ${object}.podLabels.object_version=${version_suffix} \
         ./bitnami-${object}
     fi

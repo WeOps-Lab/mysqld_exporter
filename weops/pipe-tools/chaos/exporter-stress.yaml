@@ -15,6 +15,7 @@ spec:
     selector:
       namespaces:
         - mysql
+        - mariadb
       labelSelectors:
         'pod_type': 'exporter'
     mode: all

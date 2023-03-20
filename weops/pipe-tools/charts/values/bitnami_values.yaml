@@ -6,14 +6,9 @@ initdbScripts:
 auth:
   rootPassword: Weops123!
 
-commonLabels:
-  object: mysql
-
 primary:
   nodeSelector:
     node-role: worker
-  podLabels:
-    object: mysql
   persistence:
     enabled: false
   resources:
@@ -30,8 +25,6 @@ primary:
 secondary:
   nodeSelector:
     node-role: worker
-  podLabels:
-    object: mysql
   persistence:
     enabled: false
   resources:

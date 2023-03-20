@@ -58,7 +58,7 @@ spec:
             name: mariadb-client-conf
       containers:
       - name: mariadb-exporter-cluster-primary-{{VERSION}}
-        image: registry-svc:25000/library/mariadb-exporter:latest
+        image: registry-svc:25000/library/mysql-exporter:latest
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false

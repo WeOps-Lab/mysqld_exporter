@@ -23,15 +23,25 @@ function install_object {
         --set ${object}.podLabels.object_version=${version_suffix} \
         ./bitnami-${object}
 
-      helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+      if [[ "$object" == "mysql" ]]; then
+        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=replication \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set secondary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
+      elif [[ "$object" == "mariadb" ]]; then
+        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
         -f ./values/bitnami_values.yaml \
         --set image.tag=${version} \
-        --set architecture=replication \
         --set commonLabels.object=${object} \
-        --set primary.podLabels.object=${object} \
-        --set secondary.podLabels.object=${object} \
-        --set ${object}.podLabels.object_version=${version_suffix} \
-        ./bitnami-${object}
+        --set podLabels.object=${object} \
+        --set podLabels.object_version=${version_suffix} \
+        ./bitnami-${object}-galera
+      fi
     fi
   done
 }

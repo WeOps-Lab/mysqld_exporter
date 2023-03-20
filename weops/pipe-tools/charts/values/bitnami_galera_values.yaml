@@ -14,9 +14,3 @@ resources:
   limits:
     cpu: 100m
     memory: 500Mi
-livenessProbe:
-  enabled: false
-readinessProbe:
-  enabled: false
-startupProbe:
-  enabled: false

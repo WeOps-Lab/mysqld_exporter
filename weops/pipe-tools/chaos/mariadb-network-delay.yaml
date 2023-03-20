@@ -4,7 +4,7 @@ metadata:
   namespace: mariadb
   name: mariadb-network-delay
 spec:
-  schedule: '*/5 * * * *'
+  schedule: '*/10 * * * *'
   startingDeadlineSeconds: null
   concurrencyPolicy: 'Allow'
   historyLimit: 1
@@ -17,9 +17,9 @@ spec:
         'object': 'mariadb'
     mode: all
     action: delay
-    duration: 4s
+    duration: 3s
     delay:
-      latency: '4000ms'
+      latency: '3000ms'
       correlation: '100'
       jitter: '0ms'
 

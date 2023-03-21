@@ -13,8 +13,8 @@ primary:
     enabled: false
   resources:
     limits:
-      cpu: 100m
-      memory: 500Mi
+      cpu: 300m
+      memory: 800Mi
   livenessProbe:
     enabled: false
   readinessProbe:
@@ -29,8 +29,8 @@ secondary:
     enabled: false
   resources:
     limits:
-      cpu: 100m
-      memory: 500Mi
+      cpu: 300m
+      memory: 800Mi
   livenessProbe:
     enabled: false
   readinessProbe:

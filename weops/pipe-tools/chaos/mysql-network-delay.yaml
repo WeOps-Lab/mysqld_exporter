@@ -4,7 +4,7 @@ metadata:
   namespace: mysql
   name: mysql-network-delay
 spec:
-  schedule: '* * * * *'
+  schedule: '*/3 * * * *'
   startingDeadlineSeconds: null
   concurrencyPolicy: 'Allow'
   historyLimit: 1

@@ -3,8 +3,10 @@ initdbScripts:
     CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
     GRANT PROCESS, SELECT ON *.* TO 'weops'@'%';
     GRANT REPLICATION CLIENT ON *.* TO 'weops'@'%';
+
+  user_extra.sql: |
     GRANT REPLICATION SLAVE MONITOR ON *.* TO 'weops'@'%';
-    GRANT  REPLICA MONITOR ON *.* TO 'weops'@'%';
+    GRANT REPLICA MONITOR ON *.* TO 'weops'@'%';
 
 auth:
   rootPassword: Weops123!

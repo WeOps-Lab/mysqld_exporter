@@ -84,20 +84,23 @@ pipeline {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'chaos', namespace: '', serverUrl: 'https://10.10.90.113:6443') {
                     dir('weops/pipe-tools/exporter/mysql') {
-                        sh 'kubectl apply --force -f ./standalone -n mysql'
-                        sh 'kubectl apply --force -f ./cluster -n mysql'
-                        sh 'kubectl apply --force -f ./configMap -n mysql'
+                        sh 'kubectl delete -f ./standalone -n mysql'
+                        sh 'kubectl delete -f ./cluster -n mysql'
+                        sh 'kubectl delete -f ./configMap -n mysql'
 
-                        sh 'kubectl get statefulsets -n mysql -o name | xargs kubectl rollout restart -n mysql'
-                        sh 'kubectl get deployment -n mysql -o name | xargs kubectl rollout restart -n mysql'
+                        sh 'kubectl apply -f ./standalone -n mysql'
+                        sh 'kubectl apply -f ./cluster -n mysql'
+                        sh 'kubectl apply -f ./configMap -n mysql'
                     }
 
                     dir('weops/pipe-tools/exporter/mariadb') {
-                        sh 'kubectl apply --force -f ./standalone -n mariadb'
-                        sh 'kubectl apply --force -f ./cluster -n mariadb'
-                        sh 'kubectl apply --force -f ./configMap -n mariadb'
+                        sh 'kubectl delete -f ./standalone -n mariadb'
+                        sh 'kubectl delete -f ./cluster -n mariadb'
+                        sh 'kubectl delete -f ./configMap -n mariadb'
 
-                        sh 'kubectl get statefulsets -n mariadb -o name | xargs kubectl rollout restart -n mariadb'
+                        sh 'kubectl apply -f ./standalone -n mariadb'
+                        sh 'kubectl apply -f ./cluster -n mariadb'
+                        sh 'kubectl apply -f ./configMap -n mariadb'
                     }
 
                     dir('weops/pipe-tools/chaos') {

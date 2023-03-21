@@ -1,49 +1,37 @@
 #!/bin/bash
 
-function install_single_version {
-  local object=$1
-  local version=$2
-  local architecture=$3
-  local initdbScripts=$4
-
-  helm install ${object}-standalone-${version//./-} --namespace ${object} \
-    -f ./values/bitnami_values.yaml \
-    --set image.tag=${version} \
-    --set architecture=${architecture} \
-    --set commonLabels.object=${object} \
-    --set primary.podLabels.object=${object} \
-    --set secondary.podLabels.object=${object} \
-    --set ${object}.podLabels.object_version=v${version//./-} \
-    "${initdbScripts}" \
-    ./bitnami-${object}
-}
-
 function install_object {
   local object=$1
   local versions=("${!2}")
 
   for version in "${versions[@]}"; do
+    version_suffix="v${version//./-}"
+
     if [[ "$version" == "5.5" || "$version" == "5.6" ]]; then
-      helm install ${object}-standalone-${version//./-} --namespace ${object} \
+      helm install ${object}-standalone-${version_suffix} --namespace ${object} \
         -f ./values/mysql_values.yaml \
         --set imageTag=${version} \
         ./mysql
+
     else
-      if [[ "$object" == "mysql" ]]; then
-        install_single_version ${object} ${version} "standalone"
+      helm install ${object}-standalone-${version_suffix} --namespace ${object} \
+        -f ./values/bitnami_values.yaml \
+        --set image.tag=${version} \
+        --set architecture=standalone \
+        --set commonLabels.object=${object} \
+        --set primary.podLabels.object=${object} \
+        --set ${object}.podLabels.object_version=${version_suffix} \
+        ./bitnami-${object}
 
-        install_single_version ${object} ${version} "replication"
-      elif [ "$object" == "mariadb" ]; then
-        if [[ "$version" == "10.3" || "$version" == "10.4" ]]; then
-          install_single_version ${object} ${version} "standalone"
-
-          install_single_version ${object} ${version} "replication"
-        else
-          initdbScript="CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';GRANT PROCESS, SELECT ON *.* TO 'weops'@'%';GRANT REPLICATION CLIENT ON *.* TO 'weops'@'%';GRANT REPLICA MONITOR ON *.* TO 'weops'@'%'"
-          install_single_version ${object} ${version} "standalone" "--set-string initdbScripts.user.sql=\"${initdbScript}\""
-          install_single_version ${object} ${version} "replication" "--set-string initdbScripts.user.sql=\"${initdbScript}\""
-        fi
-      fi
+      helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+        -f ./values/bitnami_values.yaml \
+        --set image.tag=${version} \
+        --set architecture=replication \
+        --set commonLabels.object=${object} \
+        --set primary.podLabels.object=${object} \
+        --set secondary.podLabels.object=${object} \
+        --set ${object}.podLabels.object_version=${version_suffix} \
+        ./bitnami-${object}
     fi
   done
 }

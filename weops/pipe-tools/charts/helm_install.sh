@@ -14,34 +14,69 @@ function install_object {
         ./mysql
 
     else
-      helm install ${object}-standalone-${version_suffix} --namespace ${object} \
-        -f ./values/bitnami_values.yaml \
-        --set image.tag=${version} \
-        --set architecture=standalone \
-        --set commonLabels.object=${object} \
-        --set primary.podLabels.object=${object} \
-        --set ${object}.podLabels.object_version=${version_suffix} \
-        ./bitnami-${object}
+      if [[ "$object" == "mysql" ]]; then
+        helm install ${object}-standalone-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=standalone \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
 
-#      if [[ "$object" == "mysql" ]]; then
-      helm install ${object}-cluster-${version_suffix} --namespace ${object} \
-        -f ./values/bitnami_values.yaml \
-        --set image.tag=${version} \
-        --set architecture=replication \
-        --set commonLabels.object=${object} \
-        --set primary.podLabels.object=${object} \
-        --set secondary.podLabels.object=${object} \
-        --set ${object}.podLabels.object_version=${version_suffix} \
-        ./bitnami-${object}
-#      elif [[ "$object" == "mariadb" ]]; then
-#        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
-#        -f ./values/bitnami_galera_values.yaml \
-#        --set image.tag=${version} \
-#        --set commonLabels.object=${object} \
-#        --set podLabels.object=${object} \
-#        --set podLabels.object_version=${version_suffix} \
-#        ./bitnami-${object}-galera
-#      fi
+        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=replication \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set secondary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
+
+      elif [ "$object" == "mariadb" ]; then
+        if [[ "$version" == "10.3" || "$version" == "10.4" ]]; then
+          helm install ${object}-standalone-${version_suffix} --namespace ${object} \
+            -f ./values/bitnami_values.yaml \
+            --set image.tag=${version} \
+            --set architecture=standalone \
+            --set commonLabels.object=${object} \
+            --set primary.podLabels.object=${object} \
+            --set ${object}.podLabels.object_version=${version_suffix} \
+            ./bitnami-${object}
+
+          helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+            -f ./values/bitnami_values.yaml \
+            --set image.tag=${version} \
+            --set architecture=replication \
+            --set commonLabels.object=${object} \
+            --set primary.podLabels.object=${object} \
+            --set secondary.podLabels.object=${object} \
+            --set ${object}.podLabels.object_version=${version_suffix} \
+            ./bitnami-${object}
+        else
+        helm install ${object}-standalone-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=standalone \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          --set-string "initdbScripts.user.sql=CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';GRANT PROCESS, SELECT ON *.* TO 'weops'@'%';GRANT REPLICATION CLIENT ON *.* TO 'weops'@'%';GRANT REPLICA MONITOR ON *.* TO 'weops'@'%'" \
+          ./bitnami-${object}
+
+        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=replication \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set secondary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          --set-string "initdbScripts.user.sql=CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';GRANT PROCESS, SELECT ON *.* TO 'weops'@'%';GRANT REPLICATION CLIENT ON *.* TO 'weops'@'%';GRANT REPLICA MONITOR ON *.* TO 'weops'@'%'" \
+          ./bitnami-${object}
+        fi
+      fi
     fi
   done
 }

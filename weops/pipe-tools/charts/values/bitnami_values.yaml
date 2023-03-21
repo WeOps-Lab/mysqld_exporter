@@ -1,7 +1,7 @@
 initdbScripts:
   user.sql: |
     CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
-    GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'weops'@'%';
+    GRANT PROCESS, REPLICATION CLIENT, SELECT, REPLICATION SLAVE MONITOR ON *.* TO 'weops'@'%';
 
 auth:
   rootPassword: Weops123!

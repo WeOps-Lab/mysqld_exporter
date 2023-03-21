@@ -1,0 +1,39 @@
+initdbScripts:
+  user.sql: |
+    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
+    GRANT PROCESS, SELECT, REPLICATION CLIENT ON *.* TO 'weops'@'%';
+
+auth:
+  rootPassword: Weops123!
+
+primary:
+  nodeSelector:
+    node-role: worker
+  persistence:
+    enabled: false
+  resources:
+    limits:
+      cpu: 300m
+      memory: 800Mi
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  startupProbe:
+    enabled: false
+
+secondary:
+  nodeSelector:
+    node-role: worker
+  persistence:
+    enabled: false
+  resources:
+    limits:
+      cpu: 300m
+      memory: 800Mi
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  startupProbe:
+    enabled: false

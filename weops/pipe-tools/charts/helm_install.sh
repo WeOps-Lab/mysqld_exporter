@@ -14,24 +14,45 @@ function install_object {
         ./mysql
 
     else
-      helm install ${object}-standalone-${version_suffix} --namespace ${object} \
-        -f ./values/bitnami_values.yaml \
-        --set image.tag=${version} \
-        --set architecture=standalone \
-        --set commonLabels.object=${object} \
-        --set primary.podLabels.object=${object} \
-        --set ${object}.podLabels.object_version=${version_suffix} \
-        ./bitnami-${object}
+      if [[ "$version" == "10.3" || "$version" == "10.4" ]] && [[ "$object" == "mariadb" ]]; then
+        helm install ${object}-standalone-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_mariadb_old_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=standalone \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
 
-      helm install ${object}-cluster-${version_suffix} --namespace ${object} \
-        -f ./values/bitnami_values.yaml \
-        --set image.tag=${version} \
-        --set architecture=replication \
-        --set commonLabels.object=${object} \
-        --set primary.podLabels.object=${object} \
-        --set secondary.podLabels.object=${object} \
-        --set ${object}.podLabels.object_version=${version_suffix} \
-        ./bitnami-${object}
+        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_mariadb_old_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=replication \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set secondary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
+      else
+        helm install ${object}-standalone-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=standalone \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
+
+        helm install ${object}-cluster-${version_suffix} --namespace ${object} \
+          -f ./values/bitnami_values.yaml \
+          --set image.tag=${version} \
+          --set architecture=replication \
+          --set commonLabels.object=${object} \
+          --set primary.podLabels.object=${object} \
+          --set secondary.podLabels.object=${object} \
+          --set ${object}.podLabels.object_version=${version_suffix} \
+          ./bitnami-${object}
+      fi
     fi
   done
 }

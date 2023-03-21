@@ -14,7 +14,7 @@ function install_object {
         ./mysql
 
     else
-      if [[ "$version" == "10.3" || "$version" == "10.4" ]] && [[ "$object" == "mariadb" ]]; then
+      if [[ "$version" != "10.3" && "$version" != "10.4" ]] && [[ "$object" == "mariadb" ]]; then
         helm install ${object}-standalone-${version_suffix} --namespace ${object} \
           -f ./values/bitnami_mariadb_old_values.yaml \
           --set image.tag=${version} \

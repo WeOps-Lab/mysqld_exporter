@@ -39,9 +39,9 @@ function install_object {
 
           install_single_version ${object} ${version} "replication"
         else
-          install_single_version ${object} ${version} "standalone" "--set-string \"initdbScripts.user.sql=CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';GRANT PROCESS, SELECT ON *.* TO 'weops'@'%';GRANT REPLICATION CLIENT ON *.* TO 'weops'@'%';GRANT REPLICA MONITOR ON *.* TO 'weops'@'%'\""
+          install_single_version ${object} ${version} "standalone" "--set-string initdbScripts.user.sql='CREATE USER \"weops\"@\"%\" IDENTIFIED BY \"Weops123!\"; GRANT PROCESS, SELECT ON *.* TO \"weops\"@\"%\"; GRANT REPLICATION CLIENT ON *.* TO \"weops\"@\"%\"; GRANT REPLICA MONITOR ON *.* TO \"weops\"@\"%\"'"
 
-          install_single_version ${object} ${version} "replication" "--set-string \"initdbScripts.user.sql=CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';GRANT PROCESS, SELECT ON *.* TO 'weops'@'%';GRANT REPLICATION CLIENT ON *.* TO 'weops'@'%';GRANT REPLICA MONITOR ON *.* TO 'weops'@'%'\""
+          install_single_version ${object} ${version} "replication" "--set-string initdbScripts.user.sql='CREATE USER \"weops\"@\"%\" IDENTIFIED BY \"Weops123!\"; GRANT PROCESS, SELECT ON *.* TO \"weops\"@\"%\"; GRANT REPLICATION CLIENT ON *.* TO \"weops\"@\"%\"; GRANT REPLICA MONITOR ON *.* TO \"weops\"@\"%\"'"
         fi
       fi
     fi

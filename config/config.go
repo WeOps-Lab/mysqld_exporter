@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/go-kit/log"
@@ -69,6 +70,7 @@ type MySqlConfig struct {
 	SslCert               string `ini:"ssl-cert"`
 	SslKey                string `ini:"ssl-key"`
 	TlsInsecureSkipVerify bool   `ini:"ssl-skip-verfication"`
+	Tls                   string `ini:"tls"`
 }
 
 type MySqlConfigHandler struct {
@@ -131,6 +133,8 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldAddress string
 		mysqlcfg := &MySqlConfig{
 			TlsInsecureSkipVerify: tlsInsecureSkipVerify,
 		}
+
+		// FIXME: this error check seems orphaned
 		if err != nil {
 			level.Error(logger).Log("msg", "failed to load config", "section", sectionName, "err", err)
 			continue
@@ -170,35 +174,46 @@ func (m MySqlConfig) validateConfig() error {
 }
 
 func (m MySqlConfig) FormDSN(target string) (string, error) {
-	var dsn, host, port string
-
-	user := m.User
-	password := m.Password
+	config := mysql.NewConfig()
+	config.User = m.User
+	config.Passwd = m.Password
+	config.Net = "tcp"
 	if target == "" {
-		host := m.Host
-		port := m.Port
-		socket := m.Socket
-		if socket != "" {
-			dsn = fmt.Sprintf("%s:%s@unix(%s)/", user, password, socket)
+		if m.Socket == "" {
+			host := "127.0.0.1"
+			if m.Host != "" {
+				host = m.Host
+			}
+			port := "3306"
+			if m.Port != 0 {
+				port = strconv.Itoa(m.Port)
+			}
+			config.Addr = net.JoinHostPort(host, port)
 		} else {
-			dsn = fmt.Sprintf("%s:%s@tcp(%s:%d)/", user, password, host, port)
+			config.Net = "unix"
+			config.Addr = m.Socket
 		}
 	} else {
-		if host, port, err = net.SplitHostPort(target); err != nil {
-			return dsn, fmt.Errorf("failed to parse target: %s", err)
+		if _, _, err = net.SplitHostPort(target); err != nil {
+			return "", fmt.Errorf("failed to parse target: %s", err)
 		}
-		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/", user, password, host, port)
+		config.Addr = target
 	}
 
-	if m.SslCa != "" {
-		if err := m.CustomizeTLS(); err != nil {
-			err = fmt.Errorf("failed to register a custom TLS configuration for mysql dsn: %w", err)
-			return dsn, err
+	if m.TlsInsecureSkipVerify {
+		config.TLSConfig = "skip-verify"
+	} else {
+		config.TLSConfig = m.Tls
+		if m.SslCa != "" {
+			if err := m.CustomizeTLS(); err != nil {
+				err = fmt.Errorf("failed to register a custom TLS configuration for mysql dsn: %w", err)
+				return "", err
+			}
+			config.TLSConfig = "custom"
 		}
-		dsn = fmt.Sprintf("%s?tls=custom", dsn)
 	}
 
-	return dsn, nil
+	return config.FormatDSN(), nil
 }
 
 func (m MySqlConfig) CustomizeTLS() error {

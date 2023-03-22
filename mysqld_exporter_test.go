@@ -28,6 +28,9 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/google/go-cmp/cmp"
+	"github.com/prometheus/mysqld_exporter/collector"
 )
 
 // bin stores information about path of executable and attached port
@@ -52,7 +55,7 @@ func TestBin(t *testing.T) {
 		}
 	}()
 
-	importpath := "github.com/prometheus/mysqld_exporter/vendor/github.com/prometheus/common"
+	importpath := "github.com/prometheus/common"
 	path := binDir + "/" + binName
 	xVariables := map[string]string{
 		importpath + "/version.Version":  "gotest-version",
@@ -126,16 +129,46 @@ func testLanding(t *testing.T, data bin) {
 	}
 	got := string(body)
 
-	expected := `<html>
-<head><title>MySQLd exporter</title></head>
-<body>
-<h1>MySQLd exporter</h1>
-<p><a href='/metrics'>Metrics</a></p>
-</body>
+	expected := `<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQLd Exporter</title>
+    <style>body {
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,Liberation Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+  margin: 0;
+}
+header {
+  background-color: #e6522c;
+  color: #fff;
+  font-size: 2rem;
+  padding: 1rem;
+}
+main {
+  padding: 1rem;
+}
+</style>
+  </head>
+  <body>
+    <header>
+      <h1>MySQLd Exporter</h1>
+    </header>
+    <main>
+      <h2>Prometheus Exporter for MySQL servers</h2>
+      <div>Version: (version=gotest-version, branch=gotest-branch, revision=gotest-revision)</div>
+      <div>
+        <ul>
+          
+          <li><a href="/metrics">Metrics</a></li>
+          
+        </ul>
+      </div>
+    </main>
+  </body>
 </html>
 `
-	if got != expected {
-		t.Fatalf("got '%s' but expected '%s'", got, expected)
+	if diff := cmp.Diff(expected, got); diff != "" {
+		t.Fatalf("expected != got \n%v\n", diff)
 	}
 }
 
@@ -217,4 +250,50 @@ func getBody(urlToGet string) ([]byte, error) {
 	}
 
 	return body, nil
+}
+
+func Test_filterScrapers(t *testing.T) {
+	type args struct {
+		scrapers      []collector.Scraper
+		collectParams []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want []collector.Scraper
+	}{
+		{"args_appears_in_collector",
+			args{
+				[]collector.Scraper{collector.ScrapeGlobalStatus{}},
+				[]string{collector.ScrapeGlobalStatus{}.Name()},
+			},
+			[]collector.Scraper{
+				collector.ScrapeGlobalStatus{},
+			}},
+		{"args_absent_in_collector",
+			args{
+				[]collector.Scraper{collector.ScrapeGlobalStatus{}},
+				[]string{collector.ScrapeGlobalVariables{}.Name()},
+			},
+			[]collector.Scraper{collector.ScrapeGlobalStatus{}}},
+		{"respect_params",
+			args{
+				[]collector.Scraper{
+					collector.ScrapeGlobalStatus{},
+					collector.ScrapeGlobalVariables{},
+				},
+				[]string{collector.ScrapeGlobalStatus{}.Name()},
+			},
+			[]collector.Scraper{
+				collector.ScrapeGlobalStatus{},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := filterScrapers(tt.args.scrapers, tt.args.collectParams); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("filterScrapers() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

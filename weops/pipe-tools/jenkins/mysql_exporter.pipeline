@@ -20,17 +20,17 @@ pipeline {
             }
         }
 
-        stage('重新部署监控对象') {
+        stage('部署监控对象') {
             steps {
                 dir('weops/pipe-tools/charts') {
                     sh 'bash helm_uninstall.sh'
-                    sleep 3
+                    sleep 1
                     sh 'bash helm_install.sh'
                 }
             }
         }
 
-        stage('编译探针'){
+        stage('编译探针并构建镜像'){
             steps {
                 script {
                     def buildOptions = [
@@ -41,66 +41,40 @@ pipeline {
                     parallel buildOptions.collectEntries { arch, options ->
                         [(arch): {
                             sh "go env -w GOPROXY=https://goproxy.cn"
-                            if (arch == "linux-amd64") {
-                                sh "${options} go build -o ${env.BuildPath}/mysql_exporter"
-                            } else if (arch == "windows-amd64") {
-                                sh "${options} go build -o ${env.BuildPath}/mysql_exporter.exe"
-                            } else if (arch == "linux-arm64") {
-                                sh "${options} go build -o ${env.BuildPath}/mysql_exporter_arm64"
-                            }
+                            sh "${options} go build -o ${env.BuildPath}/mysql_exporter_${arch}"
+                            sh "docker build --no-cache -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest ."
                         }]
                     }
                 }
-            }
-        }
-
-        stage('构建镜像') {
-            steps {
-                dir("${env.BuildPath}") {
-                    sh 'docker build --no-cache  -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest .'
-                }
-            }
-        }
-
-        stage('推送镜像') {
-            steps {
                 sh 'docker push registry-svc:25000/library/mysql-exporter:latest'
             }
         }
 
-        stage('生成部署文件') {
+        stage('生成部署文件并部署探针和混沌工程') {
             steps {
-                dir('weops/pipe-tools/exporter/mysql/template') {
-                    sh 'bash build.sh'
-                }
-
-                dir('weops/pipe-tools/exporter/mariadb/template') {
-                    sh 'bash build.sh'
-                }
-            }
-        }
-
-        stage('部署探针和混沌工程') {
-            steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'chaos', namespace: '', serverUrl: 'https://10.10.90.113:6443') {
-                    dir('weops/pipe-tools/exporter/mysql') {
-                        sh 'kubectl delete -f ./standalone -n mysql'
-                        sh 'kubectl delete -f ./cluster -n mysql'
-                        sh 'kubectl delete -f ./configMap -n mysql'
-
-                        sh 'kubectl apply -f ./standalone -n mysql'
-                        sh 'kubectl apply -f ./cluster -n mysql'
-                        sh 'kubectl apply -f ./configMap -n mysql'
+                script {
+                    def components = ["mysql", "mariadb"]
+                    components.each { component ->
+                        dir("weops/pipe-tools/exporter/${component}/template") {
+                            sh 'bash build.sh'
+                        }
                     }
+                }
 
-                    dir('weops/pipe-tools/exporter/mariadb') {
-                        sh 'kubectl delete -f ./standalone -n mariadb'
-                        sh 'kubectl delete -f ./cluster -n mariadb'
-                        sh 'kubectl delete -f ./configMap -n mariadb'
+                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'chaos', namespace: '', serverUrl: 'https://10.10.90.113:6443') {
+                    script {
+                        def components = ["mysql", "mariadb"]
+                        components.each { component ->
+                            dir("weops/pipe-tools/exporter/${component}") {
+                                sh 'kubectl delete -f ./standalone -n ${component}'
+                                sh 'kubectl delete -f ./cluster -n ${component}'
+                                sh 'kubectl delete -f ./configMap -n ${component}'
 
-                        sh 'kubectl apply -f ./standalone -n mariadb'
-                        sh 'kubectl apply -f ./cluster -n mariadb'
-                        sh 'kubectl apply -f ./configMap -n mariadb'
+                                sh 'kubectl apply -f ./standalone -n ${component}'
+                                sh 'kubectl apply -f ./cluster -n ${component}'
+                                sh 'kubectl apply -f ./configMap -n ${component}'
+                            }
+                        }
                     }
 
                     dir('weops/pipe-tools/chaos') {
@@ -115,8 +89,8 @@ pipeline {
                 dir("${env.BuildPath}") {
                     sh "tar -cvzf mysql_exporter_${env.GitTag}.tar.gz mysql_exporter mysql_exporter.exe mysql_exporter_arm64"
                     minio bucket: "release", credentialsId: "minio", excludes: "", host: "http://10.10.25.66:9000/", includes: "mysql_exporter_${env.GitTag}.tar.gz", targetFolder: "monitor_plugin/mysql/binary"
+                    }
                 }
             }
         }
     }
-}

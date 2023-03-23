@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('编译探针并构建镜像'){
+        stage('编译探针'){
             steps {
                 script {
                     def buildOptions = [
@@ -46,10 +46,15 @@ pipeline {
                         }]
                     }
                 }
+            }
+        }
+
+        stage('构建镜像和推送镜像') {
+            steps {
                 dir("${env.BuildPath}") {
-                    sh "docker build --no-cache -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest ."
+                    sh 'docker build --no-cache  -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest .'
+                    sh 'docker push registry-svc:25000/library/mysql-exporter:latest'
                 }
-                sh 'docker push registry-svc:25000/library/mysql-exporter:latest'
             }
         }
 

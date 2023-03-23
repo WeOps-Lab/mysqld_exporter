@@ -46,6 +46,9 @@ pipeline {
                         }]
                     }
                 }
+                dir("${env.BuildPath}") {
+                    sh "docker build --no-cache -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest ."
+                }
                 sh 'docker push registry-svc:25000/library/mysql-exporter:latest'
             }
         }

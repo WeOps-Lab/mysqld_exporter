@@ -42,7 +42,6 @@ pipeline {
                         [(arch): {
                             sh "go env -w GOPROXY=https://goproxy.cn"
                             sh "${options} go build -o ${env.BuildPath}/mysql_exporter_${arch}"
-                            sh "docker build --no-cache -f ../docker/Dockerfile -t registry-svc:25000/library/mysql-exporter:latest ."
                         }]
                     }
                 }

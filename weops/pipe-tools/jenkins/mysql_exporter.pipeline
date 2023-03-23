@@ -73,13 +73,13 @@ pipeline {
                         def components = ["mysql", "mariadb"]
                         components.each { component ->
                             dir("weops/pipe-tools/exporter/${component}") {
-                                sh 'kubectl delete -f ./standalone -n ${component}'
-                                sh 'kubectl delete -f ./cluster -n ${component}'
-                                sh 'kubectl delete -f ./configMap -n ${component}'
+                                sh "kubectl delete -f ./standalone -n ${component}"
+                                sh "kubectl delete -f ./cluster -n ${component}"
+                                sh "kubectl delete -f ./configMap -n ${component}"
 
-                                sh 'kubectl apply -f ./standalone -n ${component}'
-                                sh 'kubectl apply -f ./cluster -n ${component}'
-                                sh 'kubectl apply -f ./configMap -n ${component}'
+                                sh "kubectl apply -f ./standalone -n ${component}"
+                                sh "kubectl apply -f ./cluster -n ${component}"
+                                sh "kubectl apply -f ./configMap -n ${component}"
                             }
                         }
                     }

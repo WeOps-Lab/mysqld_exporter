@@ -34,9 +34,9 @@ pipeline {
             steps {
                 script {
                     def buildOptions = [
-                        "linux-amd64": "GOOS=linux GOARCH=amd64",
-                        "windows-amd64": "GOOS=windows GOARCH=amd64",
-                        "linux-arm64": "GOOS=linux GOARCH=arm64"
+                        "linux_amd64": "GOOS=linux GOARCH=amd64",
+                        "windows_amd64": "GOOS=windows GOARCH=amd64",
+                        "linux_arm64": "GOOS=linux GOARCH=arm64"
                     ]
                     parallel buildOptions.collectEntries { arch, options ->
                         [(arch): {
@@ -94,7 +94,7 @@ pipeline {
         stage('上传探针制品'){
             steps {
                 dir("${env.BuildPath}") {
-                    sh "tar -cvzf mysql_exporter_${env.GitTag}.tar.gz mysql_exporter mysql_exporter.exe mysql_exporter_arm64"
+                    sh "tar -cvzf mysql_exporter_${env.GitTag}.tar.gz mysql_exporter_linux_amd64 mysql_exporter_windows_amd64.exe mysql_exporter_linux_arm64"
                     minio bucket: "release", credentialsId: "minio", excludes: "", host: "http://10.10.25.66:9000/", includes: "mysql_exporter_${env.GitTag}.tar.gz", targetFolder: "monitor_plugin/mysql/binary"
                     }
                 }

@@ -77,76 +77,78 @@ password = 123456
 
 ### 指标简介
 
-| **指标ID**                                               | **指标中文名**            | **维度ID**                                                | **维度含义**                   | **单位** |
-|--------------------------------------------------------|----------------------|---------------------------------------------------------|----------------------------|--------|
-| mysql_up                                               | MySQL监控插件运行状态        | -                                                       | -                          | -      |
-| mysql_global_status_uptime                             | MySQL服务器运行时间         | -                                                       | -                          | s      |
-| mysql_global_status_open_files                         | MySQL打开的文件数          | -                                                       | -                          | -      |
-| mysql_global_variables_open_files_limit                | MySQL打开文件数限制         | -                                                       | -                          | -      |
-| mysql_global_status_table_open_cache_hits              | MySQL表打开缓存命中数        | -                                                       | -                          | -      |
-| mysql_global_status_table_open_cache_misses            | MySQL表打开缓存未命中数       | -                                                       | -                          | -      |
-| mysql_global_status_table_open_cache_overflows         | MySQL表打开缓存溢出数        | -                                                       | -                          | -      |
-| mysql_global_status_commands_total                     | MySQL执行的命令总数         | command                                                 | 命令类型                       | -      |
-| mysql_global_status_handlers_total                     | MySQL处理程序总数          | handler                                                 | 处理程序类型                     | -      |
-| mysql_global_status_bytes_received                     | MySQL接收的字节数          | -                                                       | -                          | bytes  |
-| mysql_global_status_bytes_sent                         | MySQL发送的字节数          | -                                                       | -                          | bytes  |
-| mysql_global_status_open_tables                        | MySQL打开的表数           | -                                                       | -                          | -      |
-| mysql_global_variables_table_open_cache                | MySQL表打开缓存数量         | -                                                       | -                          | -      |
-| mysql_global_status_open_table_definitions             | MySQL打开的表定义数         | -                                                       | -                          | -      |
-| mysql_global_variables_table_definition_cache          | MySQL表定义缓存数量         | -                                                       | -                          | -      |
-| mysql_global_status_opened_table_definitions           | MySQL打开的表定义数量        | -                                                       | -                          | -      |
-| mysql_global_status_table_locks_immediate              | MySQL立即获得的表锁数        | -                                                       | -                          | -      |
-| mysql_global_status_table_locks_waited                 | MySQL等待的表锁数          | -                                                       | -                          | -      |
-| mysql_global_status_created_tmp_tables                 | MySQL创建的临时表数         | -                                                       | -                          | -      |
-| mysql_global_status_created_tmp_disk_tables            | MySQL创建的磁盘临时表数       | -                                                       | -                          | -      |
-| mysql_global_status_created_tmp_files                  | MySQL创建的临时文件数        | -                                                       | -                          | -      |
-| mysql_global_status_opened_files                       | MySQL打开的文件数          | -                                                       | -                          | -      |
-| mysql_global_status_innodb_num_open_files              | MySQL InnoDB打开的文件数   | -                                                       | -                          | -      |
-| mysql_global_variables_innodb_log_file_size            | MySQL InnoDB 日志文件大小  | -                                                       | -                          | bytes  |
-| mysql_global_variables_max_connections                 | MySQL最大连接数           | -                                                       | -                          | -      |
-| mysql_global_status_aborted_connects                   | MySQL中止的连接数          | -                                                       | -                          | -      |
-| mysql_global_status_aborted_clients                    | MySQL中止的客户端连接数       | -                                                       | -                          | -      |
-| mysql_global_status_threads_created                    | MySQL创建的线程数          | -                                                       | -                          | -      |
-| mysql_global_status_threads_cached                     | MySQL缓存的线程数          | -                                                       | -                          | -      |
-| mysql_global_status_threads_connected                  | MySQL当前连接线程数         | -                                                       | -                          | -      |
-| mysql_global_status_max_used_connections               | MySQL最大连接线程数         | -                                                       | -                          | -      |
-| mysql_global_status_threads_running                    | MySQL正在运行的线程数        | -                                                       | -                          | -      |
-| mysql_global_status_queries                            | MySQL总查询数量           | -                                                       | -                          | -      |
-| mysql_global_status_slow_queries                       | MySQL慢查询数量           | -                                                       | -                          | -      |
-| mysql_global_status_select_full_join                   | MySQL全连接选择数          | -                                                       | -                          | -      |
-| mysql_global_status_select_full_range_join             | MySQL全范围连接选择数        | -                                                       | -                          | -      |
-| mysql_global_status_select_range                       | MySQL范围选择数           | -                                                       | -                          | -      |
-| mysql_global_status_select_range_check                 | MySQL范围检查选择数         | -                                                       | -                          | -      |
-| mysql_global_status_select_scan                        | MySQL扫描选择数           | -                                                       | -                          | -      |
-| mysql_global_status_questions                          | MySQL问题数量            | -                                                       | -                          | -      |
-| mysql_global_status_sort_rows                          | MySQL排序的行数           | -                                                       | -                          | -      |
-| mysql_global_status_sort_range                         | MySQL范围排序数           | -                                                       | -                          | -      |
-| mysql_global_status_sort_merge_passes                  | MySQL合并排序次数          | -                                                       | -                          | -      |
-| mysql_global_status_sort_scan                          | MySQL排序扫描数           | -                                                       | -                          | -      |
-| mysql_global_variables_innodb_buffer_pool_size         | MySQL InnoDB缓冲池大小    | -                                                       | -                          | bytes  |
-| mysql_global_variables_thread_cache_size               | MySQL线程缓存大小          | -                                                       | -                          | -      |
-| mysql_global_variables_key_buffer_size                 | MySQL键缓冲区大小          | -                                                       | -                          | bytes  |
-| mysql_global_variables_query_cache_size                | MySQL查询缓存大小          | -                                                       | -                          | bytes  |
-| mysql_global_status_qcache_free_memory                 | MySQL查询缓存可用内存        | -                                                       | -                          | bytes  |
-| mysql_global_status_innodb_page_size                   | MySQL InnoDB页面大小     | -                                                       | -                          | bytes  |
-| mysql_global_status_buffer_pool_pages                  | MySQL缓冲池页面数          | state                                                   | 页面状态                       | -      |
-| mysql_global_variables_innodb_log_buffer_size          | MySQL InnoDB日志缓冲区大小  | -                                                       | -                          | bytes  |
-| mysql_global_status_innodb_log_waits                   | MySQL InnoDB日志等待     | -                                                       | -                          | -      |
-| mysql_global_variables_innodb_additional_mem_pool_size | MySQL InnoDB附加内存池大小  | -                                                       | -                          | bytes  |
-| mysql_global_variables_innodb_buffer_pool_chunk_size   | MySQL InnoDB缓冲池块大小   | -                                                       | -                          | bytes  |
-| mysql_global_variables_innodb_buffer_pool_instances    | MySQL InnoDB缓冲池实例数   | -                                                       | -                          | -      |
-| mysql_global_status_qcache_hits                        | MySQL查询缓存命中数         | -                                                       | -                          | -      |
-| mysql_global_status_qcache_inserts                     | MySQL查询缓存插入数         | -                                                       | -                          | -      |
-| mysql_global_status_qcache_not_cached                  | MySQL未缓存查询数          | -                                                       | -                          | -      |
-| mysql_global_status_qcache_lowmem_prunes               | MySQL查询缓存低内存修剪数      | -                                                       | -                          | -      |
-| mysql_global_status_qcache_queries_in_cache            | MySQL查询缓存中的查询数       | -                                                       | -                          | -      |
-| mysql_slave_status_seconds_behind_master               | MySQL主从延迟时间          | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | s      |
-| mysql_slave_status_sql_delay                           | MySQL从服务器SQL延迟       | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | s      |
-| mysql_slave_status_slave_io_running                    | MySQL从库IO线程是否运行      | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
-| mysql_slave_status_slave_sql_running                   | MySQL从库SQL线程是否运行     | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
-| mysql_slave_status_read_master_log_pos                 | MySQL从库正在读取的主库日志文件位置 | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
-| mysql_slave_status_relay_log_pos                       | MySQL从库正在执行的中继日志文件位置 | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
-| mysql_slave_status_exec_master_log_pos                 | MySQL从库正在执行的主库日志文件位置 | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
+| **指标ID**                                               | **指标中文名**                | **维度ID**                                                | **维度含义**                   | **单位** |
+|--------------------------------------------------------|--------------------------|---------------------------------------------------------|----------------------------|--------|
+| mysql_up                                               | MySQL监控插件运行状态            | -                                                       | -                          | -      |
+| mysql_global_status_uptime                             | MySQL服务器运行时间             | -                                                       | -                          | s      |
+| mysql_global_status_open_files                         | MySQL打开的文件数              | -                                                       | -                          | -      |
+| mysql_global_variables_open_files_limit                | MySQL打开文件数限制             | -                                                       | -                          | -      |
+| mysql_global_status_table_open_cache_hits              | MySQL表打开缓存命中数            | -                                                       | -                          | -      |
+| mysql_global_status_table_open_cache_misses            | MySQL表打开缓存未命中数           | -                                                       | -                          | -      |
+| mysql_global_status_table_open_cache_overflows         | MySQL表打开缓存溢出数            | -                                                       | -                          | -      |
+| mysql_global_status_commands_total                     | MySQL执行的命令总数             | command                                                 | 命令类型                       | -      |
+| mysql_global_status_handlers_total                     | MySQL处理程序总数              | handler                                                 | 处理程序类型                     | -      |
+| mysql_global_status_bytes_received                     | MySQL接收的字节数              | -                                                       | -                          | bytes  |
+| mysql_global_status_bytes_sent                         | MySQL发送的字节数              | -                                                       | -                          | bytes  |
+| mysql_global_status_open_tables                        | MySQL打开的表总数              | -                                                       | -                          | -      |
+| mysql_global_status_opened_tables                      | MySQL当前打开的表数             | -                                                       | -                          | -      |
+| mysql_global_variables_table_open_cache                | MySQL表打开缓存数量             | -                                                       | -                          | -      |
+| mysql_global_status_open_table_definitions             | MySQL打开的表定义数             | -                                                       | -                          | -      |
+| mysql_global_variables_table_definition_cache          | MySQL表定义缓存数量             | -                                                       | -                          | -      |
+| mysql_global_status_opened_table_definitions           | MySQL打开的表定义数量            | -                                                       | -                          | -      |
+| mysql_global_status_table_locks_immediate              | MySQL立即获得的表锁数            | -                                                       | -                          | -      |
+| mysql_global_status_table_locks_waited                 | MySQL等待的表锁数              | -                                                       | -                          | -      |
+| mysql_global_status_created_tmp_tables                 | MySQL创建的临时表数             | -                                                       | -                          | -      |
+| mysql_global_status_created_tmp_disk_tables            | MySQL创建的磁盘临时表数           | -                                                       | -                          | -      |
+| mysql_global_status_created_tmp_files                  | MySQL创建的临时文件数            | -                                                       | -                          | -      |
+| mysql_global_status_opened_files                       | MySQL打开的文件数              | -                                                       | -                          | -      |
+| mysql_global_status_innodb_num_open_files              | MySQL InnoDB打开的文件数       | -                                                       | -                          | -      |
+| mysql_global_variables_innodb_log_file_size            | MySQL InnoDB 日志文件大小      | -                                                       | -                          | bytes  |
+| mysql_global_variables_max_connections                 | MySQL最大连接数               | -                                                       | -                          | -      |
+| mysql_global_status_aborted_connects                   | MySQL中止的连接数              | -                                                       | -                          | -      |
+| mysql_global_status_aborted_clients                    | MySQL中止的客户端连接数           | -                                                       | -                          | -      |
+| mysql_global_status_threads_created                    | MySQL创建的线程数              | -                                                       | -                          | -      |
+| mysql_global_status_threads_cached                     | MySQL缓存的线程数              | -                                                       | -                          | -      |
+| mysql_global_status_threads_connected                  | MySQL当前连接线程数             | -                                                       | -                          | -      |
+| mysql_global_status_max_used_connections               | MySQL最大连接线程数             | -                                                       | -                          | -      |
+| mysql_global_status_threads_running                    | MySQL正在运行的线程数            | -                                                       | -                          | -      |
+| mysql_global_status_queries                            | MySQL总查询数量               | -                                                       | -                          | -      |
+| mysql_global_status_slow_queries                       | MySQL慢查询数量               | -                                                       | -                          | -      |
+| mysql_global_status_select_full_join                   | MySQL全连接选择数              | -                                                       | -                          | -      |
+| mysql_global_status_select_full_range_join             | MySQL全范围连接选择数            | -                                                       | -                          | -      |
+| mysql_global_status_select_range                       | MySQL范围选择数               | -                                                       | -                          | -      |
+| mysql_global_status_select_range_check                 | MySQL范围检查选择数             | -                                                       | -                          | -      |
+| mysql_global_status_select_scan                        | MySQL扫描选择数               | -                                                       | -                          | -      |
+| mysql_global_status_questions                          | MySQL问题数量                | -                                                       | -                          | -      |
+| mysql_global_status_sort_rows                          | MySQL排序的行数               | -                                                       | -                          | -      |
+| mysql_global_status_sort_range                         | MySQL范围排序数               | -                                                       | -                          | -      |
+| mysql_global_status_sort_merge_passes                  | MySQL合并排序次数              | -                                                       | -                          | -      |
+| mysql_global_status_sort_scan                          | MySQL排序扫描数               | -                                                       | -                          | -      |
+| mysql_global_variables_innodb_buffer_pool_size         | MySQL InnoDB缓冲池大小        | -                                                       | -                          | bytes  |
+| mysql_global_variables_thread_cache_size               | MySQL线程缓存大小              | -                                                       | -                          | -      |
+| mysql_global_variables_key_buffer_size                 | MySQL键缓冲区大小              | -                                                       | -                          | bytes  |
+| mysql_global_variables_query_cache_size                | MySQL查询缓存大小              | -                                                       | -                          | bytes  |
+| mysql_global_status_qcache_free_memory                 | MySQL查询缓存可用内存            | -                                                       | -                          | bytes  |
+| mysql_global_status_innodb_page_size                   | MySQL InnoDB页面大小         | -                                                       | -                          | bytes  |
+| mysql_global_status_buffer_pool_pages                  | MySQL缓冲池页面数              | state                                                   | 页面状态                       | -      |
+| mysql_global_status_innodb_mem_dictionary              | MySQL InnoDB 存储引擎内存字典使用量 | -                                                       | -                          | bytes  |
+| mysql_global_variables_innodb_log_buffer_size          | MySQL InnoDB日志缓冲区大小      | -                                                       | -                          | bytes  |
+| mysql_global_status_innodb_log_waits                   | MySQL InnoDB日志等待         | -                                                       | -                          | `      |
+| mysql_global_variables_innodb_additional_mem_pool_size | MySQL InnoDB附加内存池大小      | -                                                       | -                          | bytes  |
+| mysql_global_variables_innodb_buffer_pool_chunk_size   | MySQL InnoDB缓冲池块大小       | -                                                       | -                          | bytes  |
+| mysql_global_variables_innodb_buffer_pool_instances    | MySQL InnoDB缓冲池实例数       | -                                                       | -                          | -      |
+| mysql_global_status_qcache_hits                        | MySQL查询缓存命中数             | -                                                       | -                          | -      |
+| mysql_global_status_qcache_inserts                     | MySQL查询缓存插入数             | -                                                       | -                          | -      |
+| mysql_global_status_qcache_not_cached                  | MySQL未缓存查询数              | -                                                       | -                          | -      |
+| mysql_global_status_qcache_lowmem_prunes               | MySQL查询缓存低内存修剪数          | -                                                       | -                          | -      |
+| mysql_global_status_qcache_queries_in_cache            | MySQL查询缓存中的查询数           | -                                                       | -                          | -      |
+| mysql_slave_status_seconds_behind_master               | MySQL主从延迟时间              | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | s      |
+| mysql_slave_status_sql_delay                           | MySQL从服务器SQL延迟           | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | s      |
+| mysql_slave_status_slave_io_running                    | MySQL从库IO线程是否运行          | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
+| mysql_slave_status_slave_sql_running                   | MySQL从库SQL线程是否运行         | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
+| mysql_slave_status_read_master_log_pos                 | MySQL从库正在读取的主库日志文件位置     | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
+| mysql_slave_status_relay_log_pos                       | MySQL从库正在执行的中继日志文件位置     | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
+| mysql_slave_status_exec_master_log_pos                 | MySQL从库正在执行的主库日志文件位置     | channel_name, connection_name, master_host, master_uuid | 通道名称, 连接名称, 主库主机名, 主库UUID  | -      |
 
 
 ### 版本日志

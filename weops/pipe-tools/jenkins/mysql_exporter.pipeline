@@ -31,22 +31,22 @@ pipeline {
         }
 
         stage('编译探针'){
-          steps {
-            script {
-              def buildOptions = [
-                "linux_amd64": "GOOS=linux GOARCH=amd64",
-                "windows_amd64": ["GOOS=windows", "GOARCH=amd64", "EXTENSION=.exe"],
-                "linux_arm64": "GOOS=linux GOARCH=arm64"
-              ]
-              parallel buildOptions.collectEntries { arch, options ->
-                [(arch): {
-                  sh "go env -w GOPROXY=https://goproxy.cn"
-                  sh "${options.join(' ')} go build -o ${env.BuildPath}/mysql_exporter_${arch}${options.EXTENSION ?: ''}"
-                }]
+              steps {
+                script {
+                  def buildOptions = [
+                    "linux_amd64": "GOOS=linux GOARCH=amd64",
+                    "windows_amd64": ["GOOS=windows", "GOARCH=amd64", "EXTENSION=.exe"],
+                    "linux_arm64": "GOOS=linux GOARCH=arm64"
+                  ]
+                  parallel buildOptions.collectEntries { arch, options ->
+                    [(arch): {
+                      sh "go env -w GOPROXY=https://goproxy.cn"
+                      sh "${options[0]} ${options[1]} go build -o ${env.BuildPath}/mysql_exporter_${arch}${options[2] != null ? options[2] : ''}"
+                    }]
+                  }
+                }
               }
             }
-          }
-        }
 
 
         stage('构建镜像和推送镜像') {

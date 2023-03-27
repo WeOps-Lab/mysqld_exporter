@@ -66,7 +66,7 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 0
         args:
-          - --mysqld.host=mariadb-standalone-{{VERSION}}
+          - --mysqld.host=mariadb-standalone-{{VERSION}}.mariadb
           - --mysqld.port=3306
           - --mysqld.username=weops
           - --mysqld.password=Weops123!

@@ -66,7 +66,7 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 0
         args:
-          - --mysqld.host=mysql-cluster-{{VERSION}}-primary
+          - --mysqld.host=mysql-cluster-{{VERSION}}-primary.mysql
           - --mysqld.port=3306
           - --mysqld.username=weops
           - --mysqld.password=Weops123!

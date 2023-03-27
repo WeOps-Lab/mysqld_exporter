@@ -7,4 +7,4 @@ WORKDIR /
 COPY mysql_exporter_linux_amd64 /mysql_exporter
 
 EXPOSE     9121
-ENTRYPOINT [ "/mysql_exporter_linux_amd64" ]
+ENTRYPOINT [ "/mysql_exporter" ]

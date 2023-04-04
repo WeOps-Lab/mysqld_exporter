@@ -22,7 +22,7 @@ spec:
     stressors:
       memory:
         workers: 1
-        size: 70%
+        size: 50%
       cpu:
         workers: 1
         load: 40

@@ -21,9 +21,9 @@ spec:
     mode: all
     stressors:
       memory:
-        workers: 1
-        size: 50%
+        workers: 2
+        size: 40%
       cpu:
-        workers: 1
+        workers: 2
         load: 40
     duration: 20s

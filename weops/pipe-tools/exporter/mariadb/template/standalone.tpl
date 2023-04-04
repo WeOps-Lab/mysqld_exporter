@@ -74,11 +74,8 @@ spec:
           - mountPath: /client_conf
             name: mariadb-client-conf
         resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
           limits:
-            cpu: 300m
+            cpu: 500m
             memory: 300Mi
         ports:
         - containerPort: 9104

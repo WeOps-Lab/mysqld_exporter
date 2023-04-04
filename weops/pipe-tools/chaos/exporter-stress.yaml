@@ -24,6 +24,6 @@ spec:
         workers: 1
         size: 70%
       cpu:
-        workers: 2
+        workers: 1
         load: 40
     duration: 20s

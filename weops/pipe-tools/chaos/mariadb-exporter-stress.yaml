@@ -1,8 +1,8 @@
 kind: Schedule
 apiVersion: chaos-mesh.org/v1alpha1
 metadata:
-  namespace: mysql
-  name: mysql-exporter-stress
+  namespace: mariadb
+  name: mariadb-exporter-stress
   annotations:
     experiment.chaos-mesh.org/pause: 'false'
 spec:
@@ -14,7 +14,6 @@ spec:
   stressChaos:
     selector:
       namespaces:
-        - mysql
         - mariadb
       labelSelectors:
         'pod_type': 'exporter'
@@ -22,8 +21,8 @@ spec:
     stressors:
       memory:
         workers: 2
-        size: 40%
+        size: 30%
       cpu:
         workers: 2
-        load: 40
+        load: 30
     duration: 20s

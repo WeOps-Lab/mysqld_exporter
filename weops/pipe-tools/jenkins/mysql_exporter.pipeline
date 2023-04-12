@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('拉取代码') {
             steps {
-                git url: 'https://proxy.zyun.vip/https://github.com/WeOps-Lab/mysqld_exporter', branch: "weops/${env.BranchName}"
+                git url: 'https://github.etherfurnace.cn/https://github.com/WeOps-Lab/mysqld_exporter', branch: "weops/${env.BranchName}"
             }
         }
 

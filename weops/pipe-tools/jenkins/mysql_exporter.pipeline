@@ -4,8 +4,8 @@ pipeline {
     }
 
     parameters {
-       string(name: 'BranchName', defaultValue: 'dev', description: null)
-       string(name: 'GitTag', defaultValue: 'dev', description: null)
+       string(name: 'BranchName', defaultValue: 'v4.2.1', description: null)
+       string(name: 'GitTag', defaultValue: 'v4.2.1', description: null)
        string(name: 'BuildPath', defaultValue: 'weops/pipe-tools/bin', description: 'The path to build binaries')
     }
 

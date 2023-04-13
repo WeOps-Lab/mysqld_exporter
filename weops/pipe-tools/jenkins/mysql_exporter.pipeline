@@ -94,6 +94,7 @@ pipeline {
         stage('上传探针制品'){
             steps {
                 dir("${env.BuildPath}") {
+                    sh "chmod 777 mysql_exporter_linux_amd64 mysql_exporter_windows_amd64.exe mysql_exporter_linux_arm64"
                     sh "tar -cvzf mysql_exporter_${env.GitTag}.tar.gz mysql_exporter_linux_amd64 mysql_exporter_windows_amd64.exe mysql_exporter_linux_arm64"
                     minio bucket: "release", credentialsId: "minio", excludes: "", host: "http://10.10.25.66:9000/", includes: "mysql_exporter_${env.GitTag}.tar.gz", targetFolder: "monitor_plugin/mysql/binary"
                     }

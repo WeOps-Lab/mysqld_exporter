@@ -5,7 +5,7 @@ metadata:
   name: mysql-network-delay
 spec:
   schedule: '*/3 * * * *'
-  startingDeadlineSeconds: null
+  startingDeadlineSeconds: 5
   concurrencyPolicy: 'Allow'
   historyLimit: 1
   type: 'NetworkChaos'

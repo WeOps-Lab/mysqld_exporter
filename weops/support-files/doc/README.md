@@ -23,37 +23,15 @@ MariaDB >= 10.3
 
 ### 参数说明
 
-| **参数名**              | **含义**                                                                                             | **是否必填** | **使用举例**       |
-|----------------------|----------------------------------------------------------------------------------------------------|----------|----------------|
-| --mysqld.host        | mysql服务地址                                                                                          | 否        | 127.0.0.1      |
-| --mysqld.port        | mysql服务端口号                                                                                         | 否        | 3306           |
-| --mysqld.username    | mysql登录账户名                                                                                         | 否        | monitor        |
-| --mysqld.password    | mysql登录账户名的密码                                                                                      | 否        | Monitor123!    |
-| --config.my-cnf      | 采集指标配置文件, 包含目标IP, 目标端口, 数据库用户名, 数据库密码l等内容。**注意！该参数在平台层面为文件参数，进程中该参数值为采集配置文件路径(上传文件即可，平台会补充文件路径)！** | 是        | 上传内容满足规范的文件    |
-| --log.level          | 日志级别                                                                                               | 否        | info           |
-| --web.listen-address | exporter监听id及端口地址                                                                                  | 否        | 127.0.0.1:9601 |
+| **参数名**              | **含义**              | **是否必填** | **使用举例**       |
+|----------------------|---------------------|----------|----------------|
+| MYSQL_USER           | mysql登录账户名(环境变量)    | 是        | monitor        |
+| MYSQL_PASSWORD       | mysql登录账户名的密码(环境变量) | 是        | Monitor123!    |
+| --mysqld.host        | mysql服务地址           | 是        | 127.0.0.1      |
+| --mysqld.port        | mysql服务端口号          | 是        | 3306           |
+| --log.level          | 日志级别                | 否        | info           |
+| --web.listen-address | exporter监听id及端口地址   | 否        | 127.0.0.1:9601 |
 
-
-**采集配置文件(client.cnf)**
-
-说明：[client]是MySQL客户端配置文件的一个段名，该段中的配置项用于连接MySQL服务端，"[client]"为固定内容，不可更改。下面是client段中常用的配置项及其含义：
-
-* host：MySQL服务端的IP地址或域名。
-* port：MySQL服务端监听的端口号，默认为3306。
-* user：MySQL服务端的登录用户名。
-* password：MySQL服务端的登录密码。
-
-需要注意的是，在使用mysql exporter时，可以通过命令行参数（例如--config.my-cnf）指定一个自定义的MySQL客户端配置文件。
-此外，如果在命令行参数中设置了--mysqld.xxx，那么该参数将覆盖掉客户端配置文件中对应的参数。如果命令行参数未设置，那么MySQL客户端将会从客户端配置文件中读取对应参数的值。
-因此，在使用mysql exporter时，需要注意参数的优先级关系，以免产生意想不到的结果。
-
-```config
-[client]
-host = 127.0.0.1
-port = 3306
-user = weops
-password = 123456
-```
 
 ### 使用指引
 
@@ -153,7 +131,7 @@ password = 123456
 
 ### 版本日志
 
-#### weops_mysql_exporter 4.2.1
+#### weops_mysql_exporter 4.2.2
 
 - weops调整
 

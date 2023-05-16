@@ -68,8 +68,11 @@ spec:
         args:
           - --mysqld.host=mysql-cluster-{{VERSION}}-primary.mysql
           - --mysqld.port=3306
-          - --mysqld.username=weops
-          - --mysqld.password=Weops123!
+        env:
+        - name: MYSQL_USER
+          value: weops
+        - name: MYSQL_PASSWORD
+          value: Weops123!
         volumeMounts:
           - mountPath: /client_conf
             name: mysql-client-conf

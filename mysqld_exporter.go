@@ -62,11 +62,11 @@ var (
 	mysqldUser = kingpin.Flag(
 		"mysqld.username",
 		"Hostname to use for connecting to MySQL",
-	).String()
+	).Default(os.Getenv("MYSQL_USER")).String()
 	mysqldPassword = kingpin.Flag(
 		"mysqld.password",
 		"Password for mysqld.username to connect MySQL",
-	).String()
+	).Default(os.Getenv("MYSQL_PASSWORD")).String()
 	tlsInsecureSkipVerify = kingpin.Flag(
 		"tls.insecure-skip-verify",
 		"Ignore certificate and server verification when using a tls connection.",
@@ -300,4 +300,11 @@ func filteredGatherer(g prometheus.Gatherer) prometheus.Gatherer {
 
 		return filteredFamilies, nil
 	})
+}
+
+func getEnv(key string, defaultVal string) string {
+	if envVal, ok := os.LookupEnv(key); ok {
+		return envVal
+	}
+	return defaultVal
 }

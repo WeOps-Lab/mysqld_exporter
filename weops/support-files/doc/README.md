@@ -139,6 +139,10 @@ MariaDB >= 10.3
 
 - 连接数据库的用户名、密码参数使用环境变量
 
+#### weops_mysql_exporter 4.2.3
+
+- 密码参数使用密码类型参数隐藏
+
 添加“小嘉”微信即可获取mysql监控指标最佳实践礼包，其他更多问题欢迎咨询
 
 <img src="https://wedoc.canway.net/imgs/img/小嘉.jpg" width="50%" height="50%">

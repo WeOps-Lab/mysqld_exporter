@@ -110,9 +110,13 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldHost string, m
 		if cfgPort := clientSection.Key("port"); mysqldPort != "" {
 			cfgPort.SetValue(mysqldPort)
 		}
+
+		// 特殊字符转义问题
 		if cfgUser := clientSection.Key("user"); mysqldUser != "" {
 			cfgUser.SetValue(mysqldUser)
 		}
+
+		// 特殊字符转义问题
 		if cfgPassword := clientSection.Key("password"); mysqldPassword != "" {
 			cfgPassword.SetValue(mysqldPassword)
 		}
@@ -146,6 +150,14 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldHost string, m
 		if err := mysqlcfg.validateConfig(); err != nil {
 			level.Error(logger).Log("msg", "failed to validate config", "section", sectionName, "err", err)
 			continue
+		}
+
+		if mysqldPassword != "" {
+			mysqlcfg.Password = mysqldPassword
+		}
+
+		if mysqldUser != "" {
+			mysqlcfg.User = mysqldUser
 		}
 
 		m[sectionName] = *mysqlcfg

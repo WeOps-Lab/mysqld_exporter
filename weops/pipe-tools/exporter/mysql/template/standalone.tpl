@@ -72,7 +72,7 @@ spec:
         - name: MYSQL_USER
           value: weops
         - name: MYSQL_PASSWORD
-          value: Weops123!
+          value: Weops$1@2&3!
         volumeMounts:
           - mountPath: /client_conf
             name: mysql-client-conf

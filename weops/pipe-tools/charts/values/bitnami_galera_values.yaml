@@ -1,5 +1,5 @@
 auth:
-  rootPassword: Weops123!
+  rootPassword: Weops$1@2&3!
 
 nodeSelector:
   node-role: worker

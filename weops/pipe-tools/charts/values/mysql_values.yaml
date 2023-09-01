@@ -1,9 +1,9 @@
 initializationFiles:
   user.sql: |
-    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops123!';
+    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops$1@2&3!';
     GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'weops'@'%';
 
-mysqlRootPassword: Weops123!
+mysqlRootPassword: Weops$1@2&3!
 
 commonLabels:
   object: mysql

@@ -69,7 +69,7 @@ spec:
           - --mysqld.host=mariadb-cluster-{{VERSION}}-primary.mariadb
           - --mysqld.port=3306
           - --mysqld.username=weops
-          - --mysqld.password=Weops123!
+          - --mysqld.password=Weops$1@2&3!
         volumeMounts:
           - mountPath: /client_conf
             name: mariadb-client-conf

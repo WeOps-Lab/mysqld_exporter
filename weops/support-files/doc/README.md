@@ -23,14 +23,14 @@ MariaDB >= 10.3
 
 ### 参数说明
 
-| **参数名**              | **含义**              | **是否必填** | **使用举例**       |
-|----------------------|---------------------|----------|----------------|
-| MYSQL_USER           | mysql登录账户名(环境变量)    | 是        | monitor        |
-| MYSQL_PASSWORD       | mysql登录账户名的密码(环境变量) | 是        | Monitor123!    |
-| --mysqld.host        | mysql服务地址           | 是        | 127.0.0.1      |
-| --mysqld.port        | mysql服务端口号          | 是        | 3306           |
-| --log.level          | 日志级别                | 否        | info           |
-| --web.listen-address | exporter监听id及端口地址   | 否        | 127.0.0.1:9601 |
+| **参数名**              | **含义**                        | **是否必填** | **使用举例**       |
+|----------------------|-------------------------------|----------|----------------|
+| MYSQL_USER           | mysql登录账户名(环境变量)              | 是        | monitor        |
+| MYSQL_PASSWORD       | mysql登录账户名的密码(环境变量),特殊字符不需要转义 | 是        | Monitor123!    |
+| --mysqld.host        | mysql服务地址                     | 是        | 127.0.0.1      |
+| --mysqld.port        | mysql服务端口号                    | 是        | 3306           |
+| --log.level          | 日志级别                          | 否        | info           |
+| --web.listen-address | exporter监听id及端口地址             | 否        | 127.0.0.1:9601 |
 
 
 ### 使用指引

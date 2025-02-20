@@ -53,10 +53,22 @@ var (
 		"mysqld.address",
 		"Address to use for connecting to MySQL",
 	).Default("localhost:3306").String()
+	mysqldHost = kingpin.Flag(
+		"mysqld.host",
+		"Host to use for connecting to MySQL",
+	).String()
+	mysqldPort = kingpin.Flag(
+		"mysqld.port",
+		"Port to use for connecting to MySQL",
+	).String()
 	mysqldUser = kingpin.Flag(
 		"mysqld.username",
 		"Hostname to use for connecting to MySQL",
-	).String()
+	).Default(os.Getenv("MYSQL_USER")).String()
+	mysqldPassword = kingpin.Flag(
+		"mysqld.password",
+		"Password for mysqld.username to connect MySQL",
+	).Default(os.Getenv("MYSQL_PASSWORD")).String()
 	tlsInsecureSkipVerify = kingpin.Flag(
 		"tls.insecure-skip-verify",
 		"Ignore certificate and server verification when using a tls connection.",
@@ -236,11 +248,16 @@ func main() {
 	kingpin.Parse()
 	logger := promslog.New(promslogConfig)
 
+	// 拼接 mysqldAddress
+	if *mysqldHost != "" && *mysqldPort != "" {
+		*mysqldAddress = fmt.Sprintf("%s:%s", *mysqldHost, *mysqldPort)
+	}
+
 	logger.Info("Starting mysqld_exporter", "version", version.Info())
 	logger.Info("Build context", "build_context", version.BuildContext())
 
 	var err error
-	if err = c.ReloadConfig(*configMycnf, *mysqldAddress, *mysqldUser, *tlsInsecureSkipVerify, logger); err != nil {
+	if err = c.ReloadConfig(*configMycnf, *mysqldAddress, *mysqldUser, *mysqldPassword, *tlsInsecureSkipVerify, logger); err != nil {
 		logger.Info("Error parsing host config", "file", *configMycnf, "err", err)
 		os.Exit(1)
 	}
@@ -274,9 +291,9 @@ func main() {
 		}
 		http.Handle("/", landingPage)
 	}
-	http.HandleFunc("/probe", handleProbe(enabledScrapers, logger))
+	//http.HandleFunc("/probe", handleProbe(enabledScrapers, logger))
 	http.HandleFunc("/-/reload", func(w http.ResponseWriter, r *http.Request) {
-		if err = c.ReloadConfig(*configMycnf, *mysqldAddress, *mysqldUser, *tlsInsecureSkipVerify, logger); err != nil {
+		if err = c.ReloadConfig(*configMycnf, *mysqldAddress, *mysqldUser, *mysqldPassword, *tlsInsecureSkipVerify, logger); err != nil {
 			logger.Warn("Error reloading host config", "file", *configMycnf, "error", err)
 			return
 		}

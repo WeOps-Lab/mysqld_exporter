@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -82,7 +83,7 @@ func (ch *MySqlConfigHandler) GetConfig() *Config {
 	return ch.Config
 }
 
-func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldAddress string, mysqldUser string, tlsInsecureSkipVerify bool, logger *slog.Logger) error {
+func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldAddress string, mysqldUser string, mysqldPassword string, tlsInsecureSkipVerify bool, logger *slog.Logger) error {
 	var host, port string
 	defer func() {
 		if err != nil {
@@ -113,8 +114,13 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldAddress string
 		if cfgPort := clientSection.Key("port"); cfgPort.String() == "" {
 			cfgPort.SetValue(port)
 		}
-		if cfgUser := clientSection.Key("user"); cfgUser.String() == "" {
-			cfgUser.SetValue(mysqldUser)
+		// 特殊字符转义问题
+		if cfgUser := clientSection.Key("user"); mysqldUser != "" {
+			cfgUser.SetValue(url.QueryEscape(mysqldUser))
+		}
+		// 特殊字符转义问题
+		if cfgPassword := clientSection.Key("password"); mysqldPassword != "" {
+			cfgPassword.SetValue(url.QueryEscape(mysqldPassword))
 		}
 	}
 
@@ -142,6 +148,15 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldAddress string
 			continue
 		}
 
+		// 特殊字符转义问题
+		if mysqldPassword != "" {
+			mysqlcfg.Password = mysqldPassword
+		}
+
+		// 特殊字符转义问题
+		if mysqldUser != "" {
+			mysqlcfg.User = mysqldUser
+		}
 		m[sectionName] = *mysqlcfg
 	}
 	config.Sections = m

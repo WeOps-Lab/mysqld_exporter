@@ -17,13 +17,12 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"log/slog"
 	"net"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
-
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/prometheus/client_golang/prometheus"
@@ -43,8 +42,6 @@ var (
 		Name:      "config_last_reload_success_timestamp_seconds",
 		Help:      "Timestamp of the last successful configuration reload.",
 	})
-
-	cfg *ini.File
 
 	opts = ini.LoadOptions{
 		// Do not error on nonexistent file to allow empty string as filename input
@@ -69,7 +66,7 @@ type MySqlConfig struct {
 	SslCa                 string `ini:"ssl-ca"`
 	SslCert               string `ini:"ssl-cert"`
 	SslKey                string `ini:"ssl-key"`
-	TlsInsecureSkipVerify bool   `ini:"ssl-skip-verfication"`
+	TlsInsecureSkipVerify bool   `ini:"ssl-skip-verfication"` //nolint:misspell
 	Tls                   string `ini:"tls"`
 }
 
@@ -85,7 +82,8 @@ func (ch *MySqlConfigHandler) GetConfig() *Config {
 	return ch.Config
 }
 
-func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldHost string, mysqldPort string, mysqldUser string, mysqldPassword string, tlsInsecureSkipVerify bool, logger log.Logger) error {
+func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldAddress string, mysqldUser string, tlsInsecureSkipVerify bool, logger *slog.Logger) error {
+	var host, port string
 	defer func() {
 		if err != nil {
 			configReloadSuccess.Set(0)
@@ -95,30 +93,28 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldHost string, m
 		}
 	}()
 
-	if cfg, err = ini.LoadSources(
+	cfg, err := ini.LoadSources(
 		opts,
 		[]byte("[client]\npassword = ${MYSQLD_EXPORTER_PASSWORD}\n"),
 		filename,
-	); err != nil {
-		return fmt.Errorf("failed to load %s: %w", filename, err)
+	)
+	if err != nil {
+		return fmt.Errorf("failed to load config from %s: %w", filename, err)
+	}
+
+	if host, port, err = net.SplitHostPort(mysqldAddress); err != nil {
+		return fmt.Errorf("failed to parse address: %w", err)
 	}
 
 	if clientSection := cfg.Section("client"); clientSection != nil {
-		if cfgHost := clientSection.Key("host"); mysqldHost != "" {
-			cfgHost.SetValue(mysqldHost)
+		if cfgHost := clientSection.Key("host"); cfgHost.String() == "" {
+			cfgHost.SetValue(host)
 		}
-		if cfgPort := clientSection.Key("port"); mysqldPort != "" {
-			cfgPort.SetValue(mysqldPort)
+		if cfgPort := clientSection.Key("port"); cfgPort.String() == "" {
+			cfgPort.SetValue(port)
 		}
-
-		// 特殊字符转义问题
-		if cfgUser := clientSection.Key("user"); mysqldUser != "" {
+		if cfgUser := clientSection.Key("user"); cfgUser.String() == "" {
 			cfgUser.SetValue(mysqldUser)
-		}
-
-		// 特殊字符转义问题
-		if cfgPassword := clientSection.Key("password"); mysqldPassword != "" {
-			cfgPassword.SetValue(mysqldPassword)
 		}
 	}
 
@@ -136,28 +132,14 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldHost string, m
 			TlsInsecureSkipVerify: tlsInsecureSkipVerify,
 		}
 
-		// FIXME: this error check seems orphaned
-		if err != nil {
-			level.Error(logger).Log("msg", "failed to load config", "section", sectionName, "err", err)
-			continue
-		}
-
 		err = sec.StrictMapTo(mysqlcfg)
 		if err != nil {
-			level.Error(logger).Log("msg", "failed to parse config", "section", sectionName, "err", err)
+			logger.Error("failed to parse config", "section", sectionName, "err", err)
 			continue
 		}
 		if err := mysqlcfg.validateConfig(); err != nil {
-			level.Error(logger).Log("msg", "failed to validate config", "section", sectionName, "err", err)
+			logger.Error("failed to validate config", "section", sectionName, "err", err)
 			continue
-		}
-
-		if mysqldPassword != "" {
-			mysqlcfg.Password = mysqldPassword
-		}
-
-		if mysqldUser != "" {
-			mysqlcfg.User = mysqldUser
 		}
 
 		m[sectionName] = *mysqlcfg
@@ -175,9 +157,6 @@ func (ch *MySqlConfigHandler) ReloadConfig(filename string, mysqldHost string, m
 func (m MySqlConfig) validateConfig() error {
 	if m.User == "" {
 		return fmt.Errorf("no user specified in section or parent")
-	}
-	if m.Password == "" {
-		return fmt.Errorf("no password specified in section or parent")
 	}
 
 	return nil
@@ -203,6 +182,9 @@ func (m MySqlConfig) FormDSN(target string) (string, error) {
 			config.Net = "unix"
 			config.Addr = m.Socket
 		}
+	} else if prefix := "unix://"; strings.HasPrefix(target, prefix) {
+		config.Net = "unix"
+		config.Addr = target[len(prefix):]
 	} else {
 		if _, _, err = net.SplitHostPort(target); err != nil {
 			return "", fmt.Errorf("failed to parse target: %s", err)

@@ -141,12 +141,22 @@ func testLanding(t *testing.T, data bin) {
 header {
   background-color: #e6522c;
   color: #fff;
-  font-size: 2rem;
+  font-size: 1rem;
   padding: 1rem;
 }
 main {
   padding: 1rem;
 }
+label {
+  display: inline-block;
+  width: 0.5em;
+}
+#pprof {
+  border: black 2px solid;
+  padding: 1rem;
+  width: fit-content;
+}
+
 </style>
   </head>
   <body>
@@ -162,6 +172,16 @@ main {
           <li><a href="/metrics">Metrics</a></li>
           
         </ul>
+      </div>
+      
+      
+      <div id="pprof">
+      Download a detailed report of resource usage (pprof format, from the Go runtime):
+      <ul>
+        <li><a href="debug/pprof/heap">heap usage (memory)</a>
+        <li><a href="debug/pprof/profile?seconds=60">CPU usage (60 second profile)</a>
+      </ul>
+      To visualize and share profiles you can upload to <a href="https://pprof.me" target="_blank">pprof.me</a>
       </div>
     </main>
   </body>
@@ -293,6 +313,83 @@ func Test_filterScrapers(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := filterScrapers(tt.args.scrapers, tt.args.collectParams); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("filterScrapers() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_getScrapeTimeoutSeconds(t *testing.T) {
+	type args struct {
+		timeoutHeader string
+		offset        float64
+	}
+	tests := []struct {
+		name        string
+		args        args
+		wantTimeout float64
+		wantErr     bool
+	}{
+		{"no_timeout_header",
+			args{},
+			0, false,
+		},
+		{"zero_timeout_header",
+			args{
+				timeoutHeader: "0",
+			},
+			0, false,
+		},
+		{"negative_timeout_header",
+			args{
+				timeoutHeader: "-5",
+			},
+			0, true,
+		},
+		{"offset_greater_than_timeout",
+			args{
+				timeoutHeader: "5",
+				offset:        6,
+			},
+			0, true,
+		},
+		{"offset_equal_timeout",
+			args{
+				timeoutHeader: "5",
+				offset:        5,
+			},
+			0, true,
+		},
+		{"offset_less_than_timeout",
+			args{
+				timeoutHeader: "5",
+				offset:        1,
+			},
+			4, false,
+		},
+		{"no_offset",
+			args{
+				timeoutHeader: "5",
+			},
+			5, false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			request, err := http.NewRequest(http.MethodGet, "", nil)
+			if err != nil {
+				t.Fatalf("unexpected error creating http request: %v", err)
+			}
+			request.Header.Set("X-Prometheus-Scrape-Timeout-Seconds", tt.args.timeoutHeader)
+
+			timeout, err := getScrapeTimeoutSeconds(request, tt.args.offset)
+			if err != nil && !tt.wantErr {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if err == nil && tt.wantErr {
+				t.Fatal("expecting an error, got nil")
+			}
+			if timeout != tt.wantTimeout {
+				t.Fatalf("unexpected timeout, got '%f' but expected '%f'", timeout, tt.wantTimeout)
 			}
 		})
 	}

@@ -17,12 +17,11 @@ package collector
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/alecthomas/kingpin/v2"
-	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -47,7 +46,7 @@ const (
 		SELECT
 		    SCHEMA_NAME
 		  FROM information_schema.schemata
-		  WHERE SCHEMA_NAME NOT IN ('mysql', 'performance_schema', 'information_schema')
+		  WHERE SCHEMA_NAME NOT IN ('mysql', 'performance_schema', 'information_schema', 'sys')
 		`
 )
 
@@ -97,8 +96,9 @@ func (ScrapeTableSchema) Version() float64 {
 }
 
 // Scrape collects data from database connection and sends it over channel as prometheus metric.
-func (ScrapeTableSchema) Scrape(ctx context.Context, db *sql.DB, ch chan<- prometheus.Metric, logger log.Logger) error {
+func (ScrapeTableSchema) Scrape(ctx context.Context, instance *instance, ch chan<- prometheus.Metric, logger *slog.Logger) error {
 	var dbList []string
+	db := instance.getDB()
 	if *tableSchemaDatabases == "*" {
 		dbListRows, err := db.QueryContext(ctx, dbListQuery)
 		if err != nil {

@@ -1,0 +1,110 @@
+groups:
+  - name: weops_mysql_exporter
+    rules:
+      # MySQL每5分钟执行命令增量
+      - record: mysql_command_increase_5m
+        expr: increase(mysql_global_status_commands_total[5m])
+
+      # MySQL每5分钟查询数增量
+      - record: mysql_queries_increase_5m
+        expr: increase(mysql_global_status_queries[5m])
+
+      # MySQL每5分钟中止的连接数增量
+      - record: mysql_aborted_connects_increase_5m
+        expr: increase(mysql_global_status_aborted_connects[5m])
+
+      # MySQL每5分钟中止的客户端连接数增量
+      - record: mysql_aborted_clients_increase_5m
+        expr: increase(mysql_global_status_aborted_clients[5m])
+
+      # MySQL每5分钟新建线程数增量
+      - record: mysql_threads_created_increase_5m
+        expr: increase(mysql_global_status_threads_created[5m])
+
+      # MySQL每5分钟处理程序操作增量
+      - record: mysql_handler_total_increase_5m
+        expr: increase(mysql_global_status_handlers_total[5m])
+
+      # MySQL每5分钟表缓存命中率
+      - record: mysql_table_cache_hit_percent_5m
+        expr: 100 * increase(mysql_global_status_table_open_cache_hits[5m]) / (increase(mysql_global_status_table_open_cache_hits[5m]) + increase(mysql_global_status_table_open_cache_misses[5m]))
+
+      # MySQL每5分钟打开表数增量
+      - record: mysql_table_opens_increase_5m
+        expr: increase(mysql_global_status_opened_tables[5m])
+        
+      # MySQL每5分钟接收字节增量
+      - record: mysql_received_bytes_increase_5m
+        expr: increase(mysql_global_status_bytes_received[5m])
+
+      # MySQL每5分钟发送字节增量
+      - record: mysql_sent_bytes_increase_5m
+        expr: increase(mysql_global_status_bytes_sent[5m])
+
+      # MySQL每5分钟全连接查询增量
+      - record: mysql_select_full_join_increase_5m 
+        expr: increase(mysql_global_status_select_full_join[5m])
+
+      # MySQL每5分钟慢查询增量
+      - record: mysql_slow_queries_increase_5m
+        expr: increase(mysql_global_status_slow_queries[5m])
+
+      # MySQL每5分钟问题数增量
+      - record: mysql_questions_increase_5m
+        expr: increase(mysql_global_status_questions[5m])
+
+      # MySQL每5分钟最大连接数
+      - record: mysql_max_threads_connected_5m
+        expr: max_over_time(mysql_global_status_threads_connected[5m])
+
+      # MySQL每5分钟最大运行线程数
+      - record: mysql_max_threads_running_5m
+        expr: max_over_time(mysql_global_status_threads_running[5m])
+
+      # MySQL每5分钟临时表创建增量
+      - record: mysql_tmp_tables_increase_5m
+        expr: increase(mysql_global_status_created_tmp_tables[5m])
+
+      # MySQL每5分钟磁盘临时表创建增量
+      - record: mysql_tmp_disk_tables_increase_5m
+        expr: increase(mysql_global_status_created_tmp_disk_tables[5m])
+
+      # MySQL每5分钟临时文件创建增量
+      - record: mysql_tmp_files_increase_5m
+        expr: increase(mysql_global_status_created_tmp_files[5m])
+
+      # MySQL每5分钟范围联表查询增量
+      - record: mysql_select_full_range_join_increase
+        expr: increase(mysql_global_status_select_full_range_join[5m])
+
+      # MySQL每5分钟范围扫描查询增量
+      - record: mysql_select_range_increase
+        expr: increase(mysql_global_status_select_range[5m])
+
+      # MySQL每5分钟范围检查查询增量
+      - record: mysql_select_range_check_increase_5m
+        expr: increase(mysql_global_status_select_range_check[5m])
+
+      # MySQL每5分钟扫描选择数增量
+      - record: mysql_select_scan_increase_5m
+        expr: increase(mysql_global_status_select_scan[5m])
+
+      # MySQL每5分钟排序行数增量
+      - record: mysql_sort_rows_increase
+        expr: increase(mysql_global_status_sort_rows[5m])
+
+      # MySQL每5分钟范围排序增量
+      - record: mysql_sort_range_increase_5m
+        expr: increase(mysql_global_status_sort_range[5m])
+
+      # MySQL每5分钟合并排序增量
+      - record: mysql_sort_merge_passes_increase_5m
+        expr: increase(mysql_global_status_sort_merge_passes[5m])
+
+      # MySQL每5分钟排序扫描增量
+      - record: mysql_sort_scan_increase_5m
+        expr: increase(mysql_global_status_sort_scan[5m])
+
+      # MySQL从库延迟(s)
+      - record: mysql_slave_lag_seconds
+        expr: mysql_slave_status_seconds_behind_master - mysql_slave_status_sql_delay

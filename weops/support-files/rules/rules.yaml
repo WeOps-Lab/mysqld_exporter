@@ -1,102 +1,102 @@
 groups:
-  - name: weops_mysql_exporter
-    rules:
-      # MySQL执行命令速率(cps)
-      - record: mysql_command_rate
-        expr: rate(mysql_global_status_commands_total[5m])
+- name: weops_mysql_exporter
+  rules:
+  # MySQL执行命令速率(cps)
+  - record: mysql_command_rate
+    expr: label_replace(rate(mysql_global_status_commands_total[5m]),"protocol","vector","","")
 
-      # MySQL查询速率(cps)
-      - record: mysql_queries_rate
-        expr: rate(mysql_global_status_queries[5m])
+  # MySQL查询速率(cps)
+  - record: mysql_queries_rate
+    expr: label_replace(rate(mysql_global_status_queries[5m]),"protocol","vector","","")
 
-      # MySQL中止的连接数增量
-      - record: mysql_aborted_connects_increase
-        expr: increase(mysql_global_status_aborted_connects[5m])
+  # MySQL中止的连接数增量
+  - record: mysql_aborted_connects_increase
+    expr: label_replace(increase(mysql_global_status_aborted_connects[5m]),"protocol","vector","","")
 
-      # MySQL中止的客户端连接数增量
-      - record: mysql_aborted_clients_increase
-        expr: increase(mysql_global_status_aborted_clients[5m])
+  # MySQL中止的客户端连接数增量
+  - record: mysql_aborted_clients_increase
+    expr: label_replace(increase(mysql_global_status_aborted_clients[5m]),"protocol","vector","","")
 
-      # MySQL新建线程数速率(cps)
-      - record: mysql_threads_created_rate
-        expr: rate(mysql_global_status_threads_created[5m])
+  # MySQL新建线程数速率(cps)
+  - record: mysql_threads_created_rate
+    expr: label_replace(rate(mysql_global_status_threads_created[5m]),"protocol","vector","","")
 
-      # MySQL处理程序操作速率(cps)
-      - record: mysql_handler_total_rate
-        expr: rate(mysql_global_status_handlers_total[5m])
+  # MySQL处理程序操作速率(cps)
+  - record: mysql_handler_total_rate
+    expr: label_replace(rate(mysql_global_status_handlers_total[5m]),"protocol","vector","","")
 
-      # MySQL表缓存命中率(%)
-      - record: mysql_table_cache_hit_percent
-        expr: 100 * increase(mysql_global_status_table_open_cache_hits[5m]) / (increase(mysql_global_status_table_open_cache_hits[5m]) + increase(mysql_global_status_table_open_cache_misses[5m]))
+  # MySQL表缓存命中率(%)
+  - record: mysql_table_cache_hit_percent
+    expr: label_replace(100 * increase(mysql_global_status_table_open_cache_hits[5m]) / (increase(mysql_global_status_table_open_cache_hits[5m]) + increase(mysql_global_status_table_open_cache_misses[5m])),"protocol","vector","","")
 
-      # MySQL打开表数速率(cps)
-      - record: mysql_table_opens_rate
-        expr: rate(mysql_global_status_opened_tables[5m])
-        
-      # MySQL接收字节速率(cps)
-      - record: mysql_received_bytes_rate
-        expr: rate(mysql_global_status_bytes_received[5m])
+  # MySQL打开表数速率(cps)
+  - record: mysql_table_opens_rate
+    expr: label_replace(rate(mysql_global_status_opened_tables[5m]),"protocol","vector","","")
 
-      # MySQL发送字节速率(cps)
-      - record: mysql_sent_bytes_rate
-        expr: rate(mysql_global_status_bytes_sent[5m])
+  # MySQL接收字节速率(cps)
+  - record: mysql_received_bytes_rate
+    expr: label_replace(rate(mysql_global_status_bytes_received[5m]),"protocol","vector","","")
 
-      # MySQL全连接查询增量
-      - record: mysql_select_full_join_increase 
-        expr: increase(mysql_global_status_select_full_join[5m])
+  # MySQL发送字节速率(cps)
+  - record: mysql_sent_bytes_rate
+    expr: label_replace(rate(mysql_global_status_bytes_sent[5m]),"protocol","vector","","")
 
-      # MySQL慢查询增量
-      - record: mysql_slow_queries_increase
-        expr: increase(mysql_global_status_slow_queries[5m])
+  # MySQL全连接查询增量
+  - record: mysql_select_full_join_increase
+    expr: label_replace(increase(mysql_global_status_select_full_join[5m]),"protocol","vector","","")
 
-      # MySQL问题数速率(cps)
-      - record: mysql_questions_rate
-        expr: rate(mysql_global_status_questions[5m])
+  # MySQL慢查询增量
+  - record: mysql_slow_queries_increase
+    expr: label_replace(increase(mysql_global_status_slow_queries[5m]),"protocol","vector","","")
 
-      # MySQL临时表创建速率(cps)
-      - record: mysql_tmp_tables_rate
-        expr: rate(mysql_global_status_created_tmp_tables[5m])
+  # MySQL问题数速率(cps)
+  - record: mysql_questions_rate
+    expr: label_replace(rate(mysql_global_status_questions[5m]),"protocol","vector","","")
 
-      # MySQL磁盘临时表创建速率(cps)
-      - record: mysql_tmp_disk_tables_rate
-        expr: rate(mysql_global_status_created_tmp_disk_tables[5m])
+  # MySQL临时表创建速率(cps)
+  - record: mysql_tmp_tables_rate
+    expr: label_replace(rate(mysql_global_status_created_tmp_tables[5m]),"protocol","vector","","")
 
-      # MySQL临时文件创建速率(cps)
-      - record: mysql_tmp_files_rate
-        expr: rate(mysql_global_status_created_tmp_files[5m])
+  # MySQL磁盘临时表创建速率(cps)
+  - record: mysql_tmp_disk_tables_rate
+    expr: label_replace(rate(mysql_global_status_created_tmp_disk_tables[5m]),"protocol","vector","","")
 
-      # MySQL范围联表查询速率(cps)
-      - record: mysql_select_full_range_join_rate
-        expr: rate(mysql_global_status_select_full_range_join[5m])
+  # MySQL临时文件创建速率(cps)
+  - record: mysql_tmp_files_rate
+    expr: label_replace(rate(mysql_global_status_created_tmp_files[5m]),"protocol","vector","","")
 
-      # MySQL范围扫描查询速率(cps)
-      - record: mysql_select_range_rate
-        expr: rate(mysql_global_status_select_range[5m])
+  # MySQL范围联表查询速率(cps)
+  - record: mysql_select_full_range_join_rate
+    expr: label_replace(rate(mysql_global_status_select_full_range_join[5m]),"protocol","vector","","")
 
-      # MySQL范围检查查询速率(cps)
-      - record: mysql_select_range_check_rate
-        expr: rate(mysql_global_status_select_range_check[5m])
+  # MySQL范围扫描查询速率(cps)
+  - record: mysql_select_range_rate
+    expr: label_replace(rate(mysql_global_status_select_range[5m]),"protocol","vector","","")
 
-      # MySQL扫描选择速率(cps)
-      - record: mysql_select_scan_rate
-        expr: rate(mysql_global_status_select_scan[5m])
+  # MySQL范围检查查询速率(cps)
+  - record: mysql_select_range_check_rate
+    expr: label_replace(rate(mysql_global_status_select_range_check[5m]),"protocol","vector","","")
 
-      # MySQL排序行数速率(cps)
-      - record: mysql_sort_rows_rate
-        expr: rate(mysql_global_status_sort_rows[5m])
+  # MySQL扫描选择速率(cps)
+  - record: mysql_select_scan_rate
+    expr: label_replace(rate(mysql_global_status_select_scan[5m]),"protocol","vector","","")
 
-      # MySQL范围排序速率(cps)
-      - record: mysql_sort_range_rate
-        expr: rate(mysql_global_status_sort_range[5m])
+  # MySQL排序行数速率(cps)
+  - record: mysql_sort_rows_rate
+    expr: label_replace(rate(mysql_global_status_sort_rows[5m]),"protocol","vector","","")
 
-      # MySQL合并排序速率(cps)
-      - record: mysql_sort_merge_passes_rate
-        expr: rate(mysql_global_status_sort_merge_passes[5m])
+  # MySQL范围排序速率(cps)
+  - record: mysql_sort_range_rate
+    expr: label_replace(rate(mysql_global_status_sort_range[5m]),"protocol","vector","","")
 
-      # MySQL排序扫描速率(cps)
-      - record: mysql_sort_scan_rate
-        expr: rate(mysql_global_status_sort_scan[5m])
+  # MySQL合并排序速率(cps)
+  - record: mysql_sort_merge_passes_rate
+    expr: label_replace(rate(mysql_global_status_sort_merge_passes[5m]),"protocol","vector","","")
 
-      # MySQL从库延迟(s)
-      - record: mysql_slave_lag_seconds
-        expr: mysql_slave_status_seconds_behind_master - mysql_slave_status_sql_delay
+  # MySQL排序扫描速率(cps)
+  - record: mysql_sort_scan_rate
+    expr: label_replace(rate(mysql_global_status_sort_scan[5m]),"protocol","vector","","")
+
+  # MySQL从库延迟(s)
+  - record: mysql_slave_lag_seconds
+    expr: label_replace(mysql_slave_status_seconds_behind_master - mysql_slave_status_sql_delay,"protocol","vector","","")

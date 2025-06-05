@@ -32,6 +32,8 @@ MariaDB >= 10.3
 | --log.level          | 日志级别                          | 否        | info           |
 | --web.listen-address | exporter监听id及端口地址             | 否        | 127.0.0.1:9601 |
 
+**注意**
+MYSQL_PASSWORD不需要编码，受限于蓝鲸平台密码不能包含 `$`，可以使用其他特殊字符。 
 
 ### 使用指引
 

@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-cluster-v5-7-primary
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-cluster-v5-7-secondary
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3307
+---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-cluster-v8-0-32-primary
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3308
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-cluster-v8-0-32-secondary
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3309
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-standalone-v5-5
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3310
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-standalone-v5-6
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3311
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-standalone-v5-7
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3312
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-standalone-v8-0-32
+  namespace: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 3313

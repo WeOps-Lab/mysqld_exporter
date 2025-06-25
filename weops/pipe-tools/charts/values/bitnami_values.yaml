@@ -1,10 +1,10 @@
 initdbScripts:
   user.sql: |
-    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops$1@2&3!';
+    CREATE USER 'weops'@'%' IDENTIFIED BY 'Weops!';
     GRANT PROCESS, SELECT, REPLICATION CLIENT ON *.* TO 'weops'@'%';
 
 auth:
-  rootPassword: Weops$1@2&3!
+  rootPassword: Weops!
 
 primary:
   nodeSelector:

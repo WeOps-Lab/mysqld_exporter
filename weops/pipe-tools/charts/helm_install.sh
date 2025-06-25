@@ -60,8 +60,10 @@ function install_object {
 object1_versions=("5.7" "5.6" "5.5" "8.0.32")
 object1=mysql
 
-object2_versions=("10.3" "10.4" "10.5" "10.6" "10.7" "10.8" "10.9")
-object2=mariadb
+#object2_versions=("10.3" "10.4" "10.5" "10.6" "10.7" "10.8" "10.9")
+#object2=mariadb
 
 install_object ${object1} object1_versions[@]
 install_object ${object2} object2_versions[@]
+
+kubectl apply -f ./svc-patch.yaml
